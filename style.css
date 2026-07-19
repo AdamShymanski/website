@@ -1,0 +1,701 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: #050505;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+}
+
+::selection {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+a {
+  color: inherit;
+}
+
+:root {
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-serif: "Newsreader", Georgia, "Times New Roman", Times, serif;
+}
+
+/* ------------------------------------------------------------------ *
+ * Theme tokens — dark by default, "bright" on the Work section.
+ * Toggled via [data-theme] on #page by app.js.
+ * ------------------------------------------------------------------ */
+.page {
+  --bg: #050505;
+  --text: #f4f4ef;
+  --muted: #8f948f;
+  --faint: #5c605c;
+  --accent: #ffffff;
+  --accent-soft: rgba(255, 255, 255, 0.08);
+  --rule: rgba(255, 255, 255, 0.1);
+  --flare: rgba(255, 255, 255, 0.1);
+  --sig: invert(1) brightness(2);
+
+  position: relative;
+  overflow-x: clip;
+  color: var(--text);
+  font-family: var(--font-mono);
+  -webkit-font-smoothing: antialiased;
+}
+
+.page[data-theme="bright"] {
+  --bg: #efece4;
+  --text: #17160f;
+  --muted: #6c6a5f;
+  --faint: #a39f92;
+  --accent: #141310;
+  --accent-soft: rgba(0, 0, 0, 0.05);
+  --rule: rgba(0, 0, 0, 0.12);
+  --flare: rgba(0, 0, 0, 0.05);
+  --sig: none;
+}
+
+/* ------------------------------------------------------------------ *
+ * Theme wash — a solid colour layer that slides vertically to reveal
+ * the new theme. `.theme-base` holds the settled colour; `.theme-wash`
+ * slides the incoming colour over it. Both driven by app.js.
+ * ------------------------------------------------------------------ */
+.theme-base,
+.theme-wash {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+}
+
+.theme-base {
+  z-index: 0;
+  background: #050505;
+}
+
+.theme-wash {
+  z-index: 1;
+  transform: translateY(100%);
+  background: #050505;
+  will-change: transform;
+}
+
+/* ------------------------------------------------------------------ *
+ * Ambient background — two soft light-pools drifting slowly, over grain
+ * ------------------------------------------------------------------ */
+.bg {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.flare {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--flare) 0%, transparent 62%);
+  filter: blur(48px);
+  will-change: transform;
+}
+
+.flare-1 {
+  width: 70vmax;
+  height: 70vmax;
+  left: -16vmax;
+  top: -20vmax;
+  animation: drift-a 64s ease-in-out infinite;
+}
+
+.flare-2 {
+  width: 58vmax;
+  height: 58vmax;
+  right: -18vmax;
+  bottom: -20vmax;
+  background: radial-gradient(circle, var(--flare) 0%, transparent 60%);
+  animation: drift-b 82s ease-in-out infinite;
+}
+
+.grain {
+  position: absolute;
+  inset: -20%;
+  opacity: 0.04;
+  mix-blend-mode: screen;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2"/></filter><rect width="100%25" height="100%25" filter="url(%23n)"/></svg>');
+}
+
+@keyframes drift-a {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(5vw, 4vh);
+  }
+}
+
+@keyframes drift-b {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(-5vw, -4vh);
+  }
+}
+
+/* ------------------------------------------------------------------ *
+ * Fixed chrome — signature, rail, image frame
+ * ------------------------------------------------------------------ */
+.sig-link {
+  position: fixed;
+  z-index: 20;
+  top: 26px;
+  left: 40px;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.sig-link img {
+  width: 108px;
+  display: block;
+  filter: var(--sig);
+  transition: filter 0.7s ease;
+}
+
+.rail {
+  position: fixed;
+  z-index: 20;
+  left: 44px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.rail a {
+  text-decoration: none;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--faint);
+  font-weight: 400;
+  transition: color 0.25s ease;
+}
+
+.rail a .bar {
+  display: inline-block;
+  height: 1.5px;
+  width: 10px;
+  opacity: 0.3;
+  background: var(--accent);
+  transition: width 0.25s ease, opacity 0.25s ease;
+}
+
+.rail a.active {
+  color: var(--text);
+  font-weight: 500;
+}
+
+.rail a.active .bar {
+  width: 24px;
+  opacity: 1;
+}
+
+.imgframe {
+  position: fixed;
+  z-index: 5;
+  right: 64px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 192px;
+  height: 256px;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  pointer-events: none;
+}
+
+.imgframe .img {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+  border: 1px solid var(--rule);
+  overflow: hidden;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.5);
+}
+
+.imgframe .img img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+/* ------------------------------------------------------------------ *
+ * Panels
+ * ------------------------------------------------------------------ */
+main {
+  position: relative;
+  z-index: 3;
+}
+
+.panel {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 120px 320px 120px 190px;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+.wrap {
+  width: 100%;
+}
+
+/* Inline editorial shots — mobile only */
+.shot {
+  display: none;
+  border: 1px solid var(--rule);
+  overflow: hidden;
+  border-radius: 2px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+}
+
+.shot img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+/* ------------------------------------------------------------------ *
+ * Thesis
+ * ------------------------------------------------------------------ */
+.thesis p {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  margin: 0;
+  color: var(--text);
+  text-wrap: pretty;
+}
+
+.thesis em {
+  font-style: italic;
+}
+
+.accent {
+  color: var(--accent);
+  font-weight: 400;
+}
+
+#thesis-1 p {
+  font-size: clamp(20px, 2.6vw, 34px);
+  line-height: 1.34;
+  letter-spacing: -0.015em;
+}
+
+#thesis-2 p,
+#thesis-3 p {
+  font-size: clamp(21px, 2.8vw, 36px);
+  line-height: 1.34;
+  letter-spacing: -0.015em;
+}
+
+#thesis-4 .p1 {
+  font-size: clamp(19px, 2.4vw, 30px);
+  line-height: 1.38;
+  letter-spacing: -0.01em;
+}
+
+#thesis-4 .p2 {
+  font-size: clamp(16px, 1.8vw, 21px);
+  line-height: 1.5;
+  margin-top: 26px;
+}
+
+/* ------------------------------------------------------------------ *
+ * Work
+ * ------------------------------------------------------------------ */
+.proj {
+  text-decoration: none;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: baseline;
+  gap: 20px;
+  padding: 22px 4px;
+  border-top: 1px solid var(--rule);
+  transition: background 0.25s ease;
+}
+
+.proj:hover {
+  background: linear-gradient(90deg, var(--accent-soft), transparent);
+}
+
+.proj-l {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+}
+
+.proj-name {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: clamp(23px, 3.2vw, 40px);
+  line-height: 1;
+  color: var(--text);
+}
+
+.arr {
+  color: var(--accent);
+  font-size: 14px;
+}
+
+.proj-r {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 5px;
+  text-align: right;
+}
+
+.proj-tag {
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+.proj-year {
+  font-size: 11px;
+  color: var(--faint);
+  font-variant-numeric: tabular-nums;
+}
+
+.end-rule {
+  border-top: 1px solid var(--rule);
+}
+
+/* ------------------------------------------------------------------ *
+ * Contact
+ * ------------------------------------------------------------------ */
+.talk {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-style: italic;
+  font-size: clamp(26px, 3.6vw, 44px);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin: 0 0 38px;
+  color: var(--text);
+}
+
+.talk .dot {
+  color: var(--accent);
+  font-style: normal;
+}
+
+.contact-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: baseline;
+  gap: 20px;
+  padding: 20px 4px;
+  border-top: 1px solid var(--rule);
+}
+
+.contact-link {
+  text-decoration: none;
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  transition: opacity 0.25s ease;
+}
+
+.contact-link:hover {
+  opacity: 0.65;
+}
+
+.contact-name {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: clamp(19px, 2.4vw, 28px);
+  color: var(--text);
+}
+
+.contact-link .arr {
+  font-size: 13px;
+}
+
+.handle {
+  font-size: 12px;
+  color: var(--faint);
+  user-select: text;
+  -webkit-user-select: text;
+  cursor: text;
+}
+
+/* ------------------------------------------------------------------ *
+ * Mobile pill nav
+ * ------------------------------------------------------------------ */
+.pillnav {
+  position: fixed;
+  z-index: 20;
+  left: 50%;
+  bottom: 20px;
+  transform: translateX(-50%);
+  display: none;
+  align-items: center;
+  gap: 4px;
+  padding: 5px;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--bg) 72%, transparent);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+
+.pillnav a {
+  text-decoration: none;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.03em;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  font-weight: 400;
+  transition: background 0.25s ease, color 0.25s ease;
+}
+
+.pillnav a.active {
+  background: var(--accent);
+  color: var(--bg);
+  font-weight: 500;
+}
+
+/* ------------------------------------------------------------------ *
+ * Reveal-on-scroll (only when JS is active, so no-JS stays readable)
+ * ------------------------------------------------------------------ */
+.js [data-reveal] {
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  will-change: opacity;
+}
+
+.js [data-reveal].in {
+  opacity: 1;
+}
+
+/* ------------------------------------------------------------------ *
+ * Mobile layout (< 900px) — matches the dedicated mobile design
+ * ------------------------------------------------------------------ */
+@media (max-width: 900px) {
+  .page {
+    --faint: #7a7d78;
+    --rule: rgba(255, 255, 255, 0.12);
+    --flare: rgba(255, 255, 255, 0.11);
+  }
+
+  .page[data-theme="bright"] {
+    --faint: #8f8c80;
+    --rule: rgba(0, 0, 0, 0.14);
+    --flare: rgba(0, 0, 0, 0.05);
+  }
+
+  .rail,
+  .imgframe {
+    display: none;
+  }
+
+  .pillnav {
+    display: flex;
+  }
+
+  .shot {
+    display: block;
+  }
+
+  .flare {
+    filter: blur(44px);
+  }
+
+  .flare-1 {
+    width: 130vw;
+    height: 130vw;
+    left: -32vw;
+    top: -26vh;
+  }
+
+  .flare-2 {
+    width: 120vw;
+    height: 120vw;
+    right: -36vw;
+    bottom: -22vh;
+  }
+
+  .grain {
+    opacity: 0.05;
+  }
+
+  .sig-link {
+    top: 20px;
+    left: 22px;
+  }
+
+  .sig-link img {
+    width: 84px;
+  }
+
+  .panel {
+    min-height: 100svh;
+    padding: 104px 24px 108px;
+  }
+
+  .wrap {
+    max-width: none !important;
+  }
+
+  .thesis .shot {
+    width: 170px;
+    height: 222px;
+    margin-bottom: 30px;
+  }
+
+  .work .shot {
+    width: 150px;
+    height: 196px;
+    margin-bottom: 28px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+  }
+
+  .contact .shot {
+    width: 150px;
+    height: 196px;
+    margin-bottom: 26px;
+  }
+
+  #thesis-1 p {
+    font-size: 24px;
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+  }
+
+  #thesis-2 p,
+  #thesis-3 p {
+    font-size: 26px;
+    line-height: 1.32;
+    letter-spacing: -0.015em;
+  }
+
+  #thesis-4 .p1 {
+    font-size: 21px;
+    line-height: 1.4;
+    letter-spacing: -0.01em;
+  }
+
+  #thesis-4 .p2 {
+    font-size: 16px;
+    line-height: 1.55;
+    margin-top: 20px;
+  }
+
+  .proj {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 16px 0;
+  }
+
+  .proj:hover {
+    background: none;
+    opacity: 0.7;
+  }
+
+  .proj-name {
+    font-size: 28px;
+  }
+
+  .arr {
+    font-size: 12px;
+  }
+
+  .proj-r {
+    flex-direction: row;
+    align-items: baseline;
+  }
+
+  .proj-tag {
+    font-size: 11px;
+    color: var(--faint);
+    white-space: nowrap;
+  }
+
+  .proj-year {
+    display: none;
+  }
+
+  .talk {
+    font-size: 34px;
+    margin-bottom: 30px;
+  }
+
+  .contact-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 15px 0;
+  }
+
+  .contact-name {
+    font-size: 22px;
+  }
+
+  .contact-link .arr {
+    font-size: 12px;
+  }
+
+  .handle {
+    font-size: 12px;
+  }
+}
+
+/* ------------------------------------------------------------------ *
+ * Reduced motion
+ * ------------------------------------------------------------------ */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .flare {
+    animation: none;
+  }
+
+  .theme-wash {
+    transition: none !important;
+  }
+
+  .js [data-reveal] {
+    opacity: 1 !important;
+    transition: none;
+  }
+}
