@@ -45,6 +45,20 @@ a {
   --flare: rgba(255, 255, 255, 0.1);
   --sig: invert(1) brightness(2);
 
+  /* Composition width. The text column and the fixed image frame sit at
+     opposite ends of one composition; left of them is the rail and the
+     signature. Below --edge-l + --comp + --edge-r (1369px) everything keeps
+     its original position. Above it, --slack splits the extra width evenly
+     and shifts rail, signature, text and image inward together, so the
+     group stays centred instead of drifting to opposite screen edges. */
+  --comp: 1100px;
+  --edge-l: 190px;
+  --edge-r: 64px;
+  --slack: max(
+    0px,
+    calc((100vw - var(--comp) - var(--edge-l) - var(--edge-r)) / 2)
+  );
+
   position: relative;
   overflow-x: clip;
   color: var(--text);
@@ -159,7 +173,7 @@ a {
   position: fixed;
   z-index: 20;
   top: 26px;
-  left: 40px;
+  left: calc(40px + var(--slack));
   text-decoration: none;
   display: flex;
   flex-direction: column;
@@ -176,7 +190,7 @@ a {
 .rail {
   position: fixed;
   z-index: 20;
-  left: 44px;
+  left: calc(44px + var(--slack));
   top: 50%;
   transform: translateY(-50%);
   display: flex;
@@ -219,7 +233,7 @@ a {
 .imgframe {
   position: fixed;
   z-index: 5;
-  right: 64px;
+  right: calc(var(--edge-r) + var(--slack));
   top: 50%;
   transform: translateY(-50%);
   width: 192px;
@@ -261,7 +275,8 @@ main {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 120px 320px 120px 190px;
+  padding: 120px calc(320px + var(--slack)) 120px
+    calc(var(--edge-l) + var(--slack));
   scroll-snap-align: start;
   scroll-snap-stop: always;
 }
@@ -390,6 +405,106 @@ main {
 
 .end-rule {
   border-top: 1px solid var(--rule);
+}
+
+/* ------------------------------------------------------------------ *
+ * Problems — landing panel
+ * An index of the eleven open problems: number, name, short description.
+ * No editorial image on this panel, so it reclaims the right gutter the
+ * image frame normally reserves.
+ * ------------------------------------------------------------------ */
+/* Eleven rows plus a lead will exceed a short laptop viewport no matter how
+   tight the rhythm, so this is the one panel allowed to run past 100vh.
+   It stays a snap target (a non-target between mandatory snap areas would be
+   impossible to rest inside) but does not force a stop, so the overflow
+   scrolls through naturally. */
+.panel.problems {
+  padding-top: 104px;
+  padding-bottom: 104px;
+  padding-right: calc(var(--edge-r) + var(--slack));
+  scroll-snap-stop: normal;
+}
+
+.problems-lead {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: clamp(18px, 1.9vw, 23px);
+  line-height: 1.45;
+  color: var(--text);
+  margin: 0 0 26px;
+  max-width: 760px;
+  text-wrap: pretty;
+}
+
+.problems-lead em {
+  font-style: italic;
+}
+
+/* The column tracks live on the list, and each row opts into them via
+   subgrid, so every description starts at the same x no matter how long the
+   name is. Reads as an index rather than a card grid. Rows stay real boxes
+   (unlike display:contents) so the hover wash and rule still work. */
+.prob-list {
+  display: grid;
+  grid-template-columns: 30px auto 1fr;
+}
+
+.prob-list > * {
+  grid-column: 1 / -1;
+}
+
+.prob {
+  display: grid;
+  grid-template-columns: 30px auto 1fr; /* fallback if subgrid is missing */
+  grid-template-columns: subgrid;
+  gap: 0 20px;
+  align-items: baseline;
+  padding: 10px 4px;
+  border-top: 1px solid var(--rule);
+  text-decoration: none;
+  transition: background 0.25s ease;
+}
+
+.prob:hover {
+  background: linear-gradient(90deg, var(--accent-soft), transparent);
+}
+
+.prob-n {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--faint);
+  font-variant-numeric: tabular-nums;
+}
+
+.prob-name {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: 19px;
+  line-height: 1.2;
+  color: var(--text);
+}
+
+.prob-desc {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+.problems-more {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-top: 20px;
+  text-decoration: none;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--muted);
+  transition: color 0.25s ease;
+}
+
+.problems-more:hover {
+  color: var(--text);
 }
 
 /* ------------------------------------------------------------------ *
@@ -652,6 +767,37 @@ main {
     display: none;
   }
 
+  /* Stack the description under the name; the shared-column alignment that
+     works on desktop has no room at this width, so drop the subgrid. */
+  .prob-list {
+    display: block;
+  }
+
+  .prob {
+    grid-template-columns: 26px 1fr;
+    gap: 3px 14px;
+    padding: 13px 0;
+  }
+
+  .prob:hover {
+    background: none;
+    opacity: 0.7;
+  }
+
+  .prob-name {
+    font-size: 18px;
+  }
+
+  .prob-desc {
+    grid-column: 2;
+    font-size: 12px;
+  }
+
+  .problems-lead {
+    font-size: 18px;
+    margin-bottom: 26px;
+  }
+
   .talk {
     font-size: 34px;
     margin-bottom: 30px;
@@ -696,12 +842,19 @@ html:has(.doc) {
   --tech-text: #d3d6d0;
 }
 
+/* Left-anchored to the same gutter the panels use, so the reading column
+   lines up with the homepage and the rail/signature keep their existing
+   relationship to the text with no separate positioning rules. */
 .doc-main {
   position: relative;
   z-index: 3;
+  max-width: none;
+  margin: 0;
+  padding: 136px 40px 110px calc(var(--edge-l) + var(--slack));
+}
+
+.doc-main > * {
   max-width: var(--measure);
-  margin: 0 auto;
-  padding: 136px 40px 110px;
 }
 
 /* Subpage rail: Index / Problems instead of the homepage sections */
@@ -716,9 +869,8 @@ html:has(.doc) {
 }
 
 .doc .crumb {
-  font-size: 11px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 0.02em;
   color: var(--faint);
   margin-bottom: 44px;
 }
@@ -744,11 +896,10 @@ html:has(.doc) {
 
 .doc .eyebrow {
   font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--muted);
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  color: var(--faint);
   margin: 0 0 18px;
 }
 
@@ -784,35 +935,44 @@ html:has(.doc) {
   gap: 8px;
 }
 
-.doc .tag {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--muted);
-  border: 1px solid var(--rule);
-  border-radius: 999px;
-  padding: 6px 11px;
+/* Plain mono descriptors separated by middots, the same idiom as .proj-tag.
+   No pills, no caps. */
+.doc .tagrow {
+  gap: 0;
 }
 
-.doc h2 {
+.doc .tag {
   font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 0.02em;
   color: var(--muted);
+}
+
+.doc .tag:not(:last-child)::after {
+  content: "·";
+  color: var(--faint);
+  margin: 0 9px;
+}
+
+/* Section labels read as editorial subheads (italic serif, sentence case),
+   not as tracked all-caps UI chrome. */
+.doc h2 {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 18px;
+  font-weight: 400;
+  letter-spacing: 0;
+  color: var(--text);
   margin: 0 0 16px;
 }
 
 .doc .h2note {
-  text-transform: none;
-  letter-spacing: 0;
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-size: 13px;
+  font-family: var(--font-mono);
+  font-style: normal;
+  font-size: 11.5px;
+  letter-spacing: 0.02em;
   color: var(--faint);
-  margin-left: 9px;
+  margin-left: 10px;
 }
 
 .doc p {
@@ -966,8 +1126,8 @@ html:has(.doc) {
 
 .doc .card-num {
   font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.1em;
+  font-size: 11.5px;
+  letter-spacing: 0.02em;
   color: var(--faint);
   font-variant-numeric: tabular-nums;
   display: block;
@@ -997,9 +1157,8 @@ html:has(.doc) {
 
 .doc .card-tags {
   font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  font-size: 11.5px;
+  letter-spacing: 0.02em;
   color: var(--faint);
   margin: 0;
 }
@@ -1029,9 +1188,8 @@ html:has(.doc) {
 
 .doc .pnav .dir {
   display: block;
-  font-size: 10px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  font-size: 11.5px;
+  letter-spacing: 0.02em;
   color: var(--faint);
   margin-bottom: 6px;
 }
