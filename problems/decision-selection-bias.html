@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Decision markets answer the wrong question · Open Problems</title>
+    <meta name="description" content="Conditional markets are meant to answer what happens if we do X. The answer is contaminated by the fact that you chose X, and Hanson, who designed them, says so." />
+    <link rel="canonical" href="https://adamszymanski.xyz/problems/decision-selection-bias.html" />
+    <meta name="theme-color" content="#050505" />
+    <meta name="color-scheme" content="dark" />
+
+    <link rel="icon" type="image/x-icon" href="/assets/favicon/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png" />
+
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Adam Szymański" />
+    <meta property="og:title" content="Decision markets answer the wrong question" />
+    <meta property="og:description" content="Conditional prices give correlation where a decision needs causation. The known fix is randomisation, which no board will accept." />
+    <meta property="og:url" content="https://adamszymanski.xyz/problems/decision-selection-bias.html" />
+    <meta property="og:image" content="https://adamszymanski.xyz/assets/og/og-image.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:creator" content="@a_szymanski_" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,300;1,6..72,400&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <div class="page doc" data-theme="dark">
+      <!-- Settled theme colour; no wash needed, this section is always dark -->
+      <div class="theme-base" aria-hidden="true"></div>
+
+      <!-- Ambient background: same drifting light-pools + grain as the homepage -->
+      <div class="bg" aria-hidden="true">
+        <div class="flare flare-1"></div>
+        <div class="flare flare-2"></div>
+        <div class="grain"></div>
+      </div>
+
+      <!-- Fixed signature, links home -->
+      <a class="sig-link" href="/" aria-label="Adam Szymański — home">
+        <img src="/assets/signature.webp" alt="Adam Szymański" />
+      </a>
+
+      <!-- Desktop rail: site-level, not homepage sections -->
+      <nav class="rail docrail" aria-label="Site">
+        <a href="/"><span class="bar" aria-hidden="true"></span>Index</a>
+        <a href="/problems/" class="active"><span class="bar" aria-hidden="true"></span>Problems</a>
+      </nav>
+
+      <main class="doc-main">
+      <nav class="crumb">
+        <a href="/">Adam Szymański</a><span class="slash">/</span><a href="/problems/">Problems</a><span class="slash">/</span>09
+      </nav>
+
+      <header class="top">
+        <p class="eyebrow">Problem 09 · Decision-selection bias</p>
+        <h1 class="ptitle">Decision markets answer the <em>wrong question</em>.</h1>
+        <p class="standfirst">
+          The point of a decision market is to ask what happens if we do X. Hanson,
+          who designed the mechanism, admits the answer you get is contaminated. The
+          known fix is to decide at random, which no organisation will accept.
+        </p>
+        <div class="tagrow">
+          <span class="tag">Causal inference</span>
+          <span class="tag">Futarchy data now exists</span>
+          <span class="tag">Gates the revenue problem</span>
+        </div>
+      </header>
+
+      <section class="tier tier-1">
+        <h2>Simple <span class="h2note">assumes nothing</span></h2>
+        <p>
+          The useful version of a prediction market is conditional. What happens to
+          revenue if we hire this CEO? You run two markets, one assuming you hire
+          them and one assuming you do not. Only the market matching your real
+          decision pays out, and the other is cancelled with everyone's money
+          returned.
+        </p>
+        <p>
+          The trouble is who trades in each one. If traders believe you will only
+          hire that CEO when things are already going well, then the "we hired them"
+          market is pricing a world that was already going well. It looks like the
+          CEO causes good outcomes. What it really shows is your decision revealing
+          what you already knew.
+        </p>
+        <p>
+          The fix that works is to make the decision randomly at least some of the
+          time. Almost no board will agree to that, so the flaw stays in place.
+        </p>
+      </section>
+
+      <section class="tier tier-2">
+        <h2>Moderate <span class="h2note">assumes you know what a market is</span></h2>
+        <p>
+          This is the gap between correlation and causation appearing inside a
+          mechanism built to produce causal answers. Conditional prices are
+          conditional expectations, and a conditional expectation equals the causal
+          effect only when the decision is independent of the information traders
+          hold. In any real organisation the decision is made using that
+          information, which is exactly the violation.
+        </p>
+        <p>
+          Hanson has been explicit that this is unresolved. The standard remedy is
+          randomisation, which turns the conditional into a genuine intervention.
+          The blocker there is political rather than technical, which is why the
+          problem has sat still for two decades.
+        </p>
+        <p>
+          A lot depends on it. Futarchy is decision markets applied to governance,
+          and futarchy is shipping now: Jito's fee switch through MetaDAO, Sanctum
+          routing governance through conditional markets. Real money, real decisions,
+          this bias underneath all of it. It also gates the revenue problem, since a
+          causal answer is precisely what a paying principal wants.
+        </p>
+      </section>
+
+      <section class="tier tier-3">
+        <h2>Technical <span class="h2note">state of the art and the gap</span></h2>
+        <p>
+          Let <code>D</code> be the decision and <code>Y</code> the outcome. The
+          market gives <code>E[Y | D = d, trader info]</code>, and the object a
+          decision maker needs is <code>E[Y | do(D = d)]</code>. These coincide when
+          <code>D</code> is independent of unobserved confounders, and organisational
+          decision processes are built to violate that by design.
+        </p>
+        <p>
+          Where the open work sits. Full randomisation identifies the effect and is
+          politically dead. Partial randomisation, committing in advance to a small
+          probability <code>ε</code> of deciding at random, recovers identification
+          on the randomised subsample at the cost of <code>ε</code> times the
+          decision quality, and the bias-variance tradeoff as a function of
+          <code>ε</code> has never been worked out. That is a small, tractable
+          problem that would turn randomisation from a non-starter into a dial.
+          Instrumental variables using pre-committed decision rules is unexplored.
+          So is bounding the bias: even without identification, an upper bound on
+          how wrong a conditional price can be would let a principal use it with a
+          stated caveat, which is more than exists today.
+        </p>
+        <p>
+          The empirical opening is new. On-chain futarchy produces a public record of
+          conditional prices sitting next to realised outcomes. That data did not
+          exist when the objection was first raised, and nobody has gone and looked
+          at it.
+        </p>
+      </section>
+
+      <section class="block">
+        <h2>Where I would start</h2>
+        <ol class="steps">
+          <li>
+            Collect the on-chain futarchy record. Jito through MetaDAO and Sanctum
+            both have conditional prices next to outcomes. Start by just looking at
+            it, because nobody has.
+          </li>
+          <li>
+            Work out the bias-variance tradeoff for partial randomisation as a
+            function of <code>ε</code>. Small, self-contained, and it makes the fix
+            negotiable instead of taboo.
+          </li>
+          <li>
+            Try to bound the bias without identification. A stated worst case is
+            usable by a real organisation in a way that "this is contaminated" never
+            is.
+          </li>
+          <li>
+            Hunt for pre-committed decision rules that could serve as instruments.
+            Anything mechanical, like a threshold or a scheduled review, is a
+            candidate.
+          </li>
+        </ol>
+      </section>
+
+      <section class="block">
+        <h2>What counts as a result</h2>
+        <p class="result">
+          A defensible recommendation for <code>ε</code>, or a bound on the bias.
+          Either one makes decision markets usable by organisations that will never
+          agree to randomise fully, which is all of them.
+        </p>
+      </section>
+
+      <section class="block">
+        <h2>Related</h2>
+        <ul class="list">
+          <li>
+            <a class="a" href="/problems/who-pays.html">02 Nobody buys the answer</a>
+            <span class="t">the customer this would unlock</span>
+          </li>
+          <li>
+            <a class="a" href="/problems/reflexivity.html">03 The price moves the thing it prices</a>
+            <span class="t">the same causal tangle from the other end</span>
+          </li>
+        </ul>
+      </section>
+
+      <nav class="pnav">
+        <a href="/problems/manipulation-ceiling.html">
+          <span class="dir">Previous</span>08 The thermometer costs $34,000
+        </a>
+        <a class="next" href="/problems/meta-markets.html">
+          <span class="dir">Next</span>10 A market on how wrong the market is
+        </a>
+      </nav>
+      </main>
+    </div>
+  </body>
+</html>

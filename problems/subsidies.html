@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Every market is on life support · Open Problems</title>
+    <meta name="description" content="Every prediction market alive today is paid to be alive. Nobody has worked out the cheapest way to keep one breathing, or where the money should go." />
+    <link rel="canonical" href="https://adamszymanski.xyz/problems/subsidies.html" />
+    <meta name="theme-color" content="#050505" />
+    <meta name="color-scheme" content="dark" />
+
+    <link rel="icon" type="image/x-icon" href="/assets/favicon/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png" />
+
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Adam Szymański" />
+    <meta property="og:title" content="Every market is on life support" />
+    <meta property="og:description" content="Every prediction market alive today is paid to be alive. Nobody has worked out the cheapest way to keep one breathing." />
+    <meta property="og:url" content="https://adamszymanski.xyz/problems/subsidies.html" />
+    <meta property="og:image" content="https://adamszymanski.xyz/assets/og/og-image.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:creator" content="@a_szymanski_" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,300;1,6..72,400&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <div class="page doc" data-theme="dark">
+      <!-- Settled theme colour; no wash needed, this section is always dark -->
+      <div class="theme-base" aria-hidden="true"></div>
+
+      <!-- Ambient background: same drifting light-pools + grain as the homepage -->
+      <div class="bg" aria-hidden="true">
+        <div class="flare flare-1"></div>
+        <div class="flare flare-2"></div>
+        <div class="grain"></div>
+      </div>
+
+      <!-- Fixed signature, links home -->
+      <a class="sig-link" href="/" aria-label="Adam Szymański — home">
+        <img src="/assets/signature.webp" alt="Adam Szymański" />
+      </a>
+
+      <!-- Desktop rail: site-level, not homepage sections -->
+      <nav class="rail docrail" aria-label="Site">
+        <a href="/"><span class="bar" aria-hidden="true"></span>Index</a>
+        <a href="/problems/" class="active"><span class="bar" aria-hidden="true"></span>Problems</a>
+      </nav>
+
+      <main class="doc-main">
+      <nav class="crumb">
+        <a href="/">Adam Szymański</a><span class="slash">/</span><a href="/problems/">Problems</a><span class="slash">/</span>01
+      </nav>
+
+      <header class="top">
+        <p class="eyebrow">Problem 01 · Subsidy allocation</p>
+        <h1 class="ptitle">Every market is on <em>life support</em>.</h1>
+        <p class="standfirst">
+          Every prediction market alive today is paid to be alive. Nobody has
+          worked out the cheapest way to keep one breathing, or where the money
+          should go when you only have a little of it.
+        </p>
+        <div class="tagrow">
+          <span class="tag">Mechanism design</span>
+          <span class="tag">Empirical</span>
+          <span class="tag">Manifold-scale budget</span>
+        </div>
+      </header>
+
+      <section class="tier tier-1">
+        <h2>Simple <span class="h2note">assumes nothing</span></h2>
+        <p>
+          A bet needs someone on the other side. On a small market nobody is
+          there, so the price sits still and tells you nothing. Platforms fix
+          this by paying people to show up. Metaculus pays in prizes. Polymarket
+          paid in tokens and airdrops. That money is a subsidy, and it comes from
+          investors rather than from customers.
+        </p>
+        <p>
+          The question everyone asks is how to get rid of the subsidy. There is a
+          smaller question nobody has answered, which is how to spend it well. If
+          you have ten thousand dollars and want the best possible market, where
+          does the money go? Into rewards for the people quoting prices, into a
+          bigger prize for being right, or into paying a careful person to write a
+          resolution rule that cannot be argued with?
+        </p>
+        <p>
+          Nobody knows. Every platform guesses, and the guesses have never been
+          compared.
+        </p>
+      </section>
+
+      <section class="tier tier-2">
+        <h2>Moderate <span class="h2note">assumes you know what a market is</span></h2>
+        <p>
+          The standard framing is liquidity provision. You pay market makers to
+          quote tight spreads, they absorb inventory risk, traders get filled,
+          prices move on information. LMSR does this with a fixed worst-case loss,
+          so the subsidy is literally a parameter you set before opening.
+        </p>
+        <p>
+          Liquidity may not be the binding constraint at small budgets. A market
+          with a vague resolution criterion carries a wide spread for a reason no
+          amount of maker reward touches. Traders are not pricing the event, they
+          are pricing the chance the rule gets read differently than they expect.
+          That is spec risk, and maker subsidy does nothing to it. My guess is
+          that below some budget threshold, a dollar spent on writing the rule
+          buys more price quality than a dollar spent on liquidity. The threshold
+          should be measurable.
+        </p>
+        <p>
+          So this is a real optimization. Given a budget, split it across maker
+          rewards, trader incentives, resolution quality, and how many markets you
+          open at all, to maximize information gained per dollar. Nobody has
+          written that objective down. There is no benchmark, no baseline, and no
+          measured comparison of two subsidy schemes on the same event.
+        </p>
+      </section>
+
+      <section class="tier tier-3">
+        <h2>Technical <span class="h2note">state of the art and the gap</span></h2>
+        <p>
+          LMSR bounds the market maker's worst-case loss at <code>b·ln(n)</code>
+          for liquidity parameter <code>b</code> over <code>n</code> outcomes,
+          which makes <code>b</code> the price of a market. What is missing is any
+          result relating <code>b</code> to price quality. We know exactly what a
+          market costs. We do not know what we bought.
+        </p>
+        <p>
+          Three pieces are open. First the objective: a candidate is expected
+          reduction in KL divergence between the market's terminal distribution
+          and the realised outcome, per dollar spent, though anything defensible
+          would be progress. Second the allocation, treating maker reward,
+          resolution-spec investment, and market count as competing line items
+          and finding the interior optimum. Third the exit condition. Is there a
+          liquidity level above which organic flow sustains itself, making the
+          subsidy a startup cost rather than an operating cost? That is a question
+          about whether the system has an attracting fixed point, and it decides
+          whether "self-sustaining" is even the right target or whether permanent
+          subsidy is simply the cost of running public infrastructure.
+        </p>
+        <p>
+          The experimental shape already exists. Rasooly and Rozzi ran 817
+          Manifold markets to study whether manipulation persists. The same design
+          works here, and Manifold will let you do it without asking anyone.
+        </p>
+      </section>
+
+      <section class="block">
+        <h2>Where I would start</h2>
+        <ol class="steps">
+          <li>
+            Write the objective function down before running anything. If you
+            cannot state what you are maximizing, the experiment produces numbers
+            you cannot interpret.
+          </li>
+          <li>
+            Pick one event class with recurring instances. Weekly economic
+            releases, sports, anything that repeats. Recurrence is what lets you
+            compare two schemes without confounding them with the event.
+          </li>
+          <li>
+            Run the same event twice on Manifold. Once with the budget in maker
+            subsidy, once with most of it spent on an airtight resolution spec and
+            a smaller subsidy. Compare terminal Brier scores.
+          </li>
+          <li>
+            Go looking for anything in the literature connecting <code>b</code> to
+            accuracy. I have not found it. If it genuinely does not exist, that
+            absence is the paper.
+          </li>
+        </ol>
+      </section>
+
+      <section class="block">
+        <h2>What counts as a result</h2>
+        <p class="result">
+          A curve. Dollars on one axis, some measure of price quality on the
+          other, for two or more allocation strategies. Even a rough one over a
+          handful of markets would be the first empirical thing anyone has
+          published here.
+        </p>
+      </section>
+
+      <section class="block">
+        <h2>Related</h2>
+        <ul class="list">
+          <li>
+            <a class="a" href="/problems/who-pays.html">02 Nobody buys the answer</a>
+            <span class="t">the reason the subsidy exists</span>
+          </li>
+          <li>
+            <a class="a" href="/problems/resolution-independence.html">07 The referee holds a position</a>
+            <span class="t">why spec quality is worth paying for</span>
+          </li>
+        </ul>
+      </section>
+
+      <nav class="pnav">
+        <span></span>
+        <a class="next" href="/problems/who-pays.html">
+          <span class="dir">Next</span>02 Nobody buys the answer
+        </a>
+      </nav>
+      </main>
+    </div>
+  </body>
+</html>

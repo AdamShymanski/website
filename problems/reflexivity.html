@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The price moves the thing it prices · Open Problems</title>
+    <meta name="description" content="A market says the bank fails. Depositors withdraw. The bank fails. The forecast was correct and it was also the cause, and calibration cannot tell those apart." />
+    <link rel="canonical" href="https://adamszymanski.xyz/problems/reflexivity.html" />
+    <meta name="theme-color" content="#050505" />
+    <meta name="color-scheme" content="dark" />
+
+    <link rel="icon" type="image/x-icon" href="/assets/favicon/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png" />
+
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Adam Szymański" />
+    <meta property="og:title" content="The price moves the thing it prices" />
+    <meta property="og:description" content="A market says the bank fails. Depositors withdraw. The bank fails. The forecast was correct and it was also the cause." />
+    <meta property="og:url" content="https://adamszymanski.xyz/problems/reflexivity.html" />
+    <meta property="og:image" content="https://adamszymanski.xyz/assets/og/og-image.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:creator" content="@a_szymanski_" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,300;1,6..72,400&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <div class="page doc" data-theme="dark">
+      <!-- Settled theme colour; no wash needed, this section is always dark -->
+      <div class="theme-base" aria-hidden="true"></div>
+
+      <!-- Ambient background: same drifting light-pools + grain as the homepage -->
+      <div class="bg" aria-hidden="true">
+        <div class="flare flare-1"></div>
+        <div class="flare flare-2"></div>
+        <div class="grain"></div>
+      </div>
+
+      <!-- Fixed signature, links home -->
+      <a class="sig-link" href="/" aria-label="Adam Szymański — home">
+        <img src="/assets/signature.webp" alt="Adam Szymański" />
+      </a>
+
+      <!-- Desktop rail: site-level, not homepage sections -->
+      <nav class="rail docrail" aria-label="Site">
+        <a href="/"><span class="bar" aria-hidden="true"></span>Index</a>
+        <a href="/problems/" class="active"><span class="bar" aria-hidden="true"></span>Problems</a>
+      </nav>
+
+      <main class="doc-main">
+      <nav class="crumb">
+        <a href="/">Adam Szymański</a><span class="slash">/</span><a href="/problems/">Problems</a><span class="slash">/</span>03
+      </nav>
+
+      <header class="top">
+        <p class="eyebrow">Problem 03 · Reflexivity</p>
+        <h1 class="ptitle">The price moves the thing it <em>prices</em>.</h1>
+        <p class="standfirst">
+          A market says the bank fails with 90% probability. Depositors see it and
+          withdraw. The bank fails. The forecast was correct and it was also the
+          cause.
+        </p>
+        <div class="tagrow">
+          <span class="tag">Theory</span>
+          <span class="tag">Empirical</span>
+          <span class="tag">Hard identification</span>
+        </div>
+      </header>
+
+      <section class="tier tier-1">
+        <h2>Simple <span class="h2note">assumes nothing</span></h2>
+        <p>
+          Prediction markets get treated as thermometers. They are closer to
+          thermostats. A thermometer reads the temperature. A thermostat reads it
+          and then changes it.
+        </p>
+        <p>
+          Once a probability is public, people act on it. Donors abandon a
+          candidate sitting at 5%. Depositors pull money out of a bank the market
+          says is failing. Journalists write the story the price implies, and the
+          story moves the price again. The forecast becomes part of the machinery
+          producing the outcome.
+        </p>
+        <p>
+          Sometimes that is good. A fire alarm makes fire less likely, and a market
+          warning of a shortage can cause the shortage to be prevented. Sometimes
+          it is a self-fulfilling collapse. Nobody can currently tell you which
+          one a given market is, in advance. That is the problem.
+        </p>
+      </section>
+
+      <section class="tier tier-2">
+        <h2>Moderate <span class="h2note">assumes you know what a market is</span></h2>
+        <p>
+          The mechanism is a loop. Price feeds belief, belief feeds action, action
+          feeds outcome, outcome feeds resolution, resolution feeds price.
+          Standard market theory assumes the link from price back to outcome is
+          absent. In prediction markets it is often present and occasionally
+          strong.
+        </p>
+        <p>
+          The sign matters more than the size. Negative feedback damps, so the
+          market converges and looks like a good forecaster. Positive feedback
+          amplifies, so the market can drive the outcome and still score as
+          perfectly calibrated, because it caused what it predicted. A market that
+          causes 100% of its own outcomes has flawless calibration.
+        </p>
+        <p>
+          That breaks the standard defence of the whole field. Accuracy is offered
+          as proof of value, and accuracy is exactly what a self-fulfilling market
+          would display. Nobody has separated the two empirically. The design
+          question of how to damp the loop deliberately is untouched.
+        </p>
+      </section>
+
+      <section class="tier tier-3">
+        <h2>Technical <span class="h2note">state of the art and the gap</span></h2>
+        <p>
+          Let <code>p</code> be the real outcome probability, <code>q</code> the
+          market price, and <code>f</code> a response function capturing how
+          agents' actions change the real probability, so <code>p = f(q)</code>.
+          Equilibrium requires <code>q = f(q)</code>. Existence follows from
+          continuity on the unit interval by Brouwer. Uniqueness does not. Where
+          <code>f' &gt; 1</code>, multiple equilibria exist and the market's
+          selection among them is path dependent, which means it is set by early
+          liquidity and order flow rather than by information.
+        </p>
+        <p>
+          Three pieces are open. Estimating <code>f'</code> empirically for real
+          categories, which needs an instrument for exogenous price movement. Bank
+          runs, candidate viability, and protocol governance are where
+          <code>f'</code> is plausibly above 1. Designing contracts that damp the
+          loop on purpose, for instance resolving on a measurement window that
+          closes before the price is published, so actions taken in response
+          cannot enter resolution. And the identification problem of separating
+          "predicted well" from "caused it", which needs something like the
+          Rasooly and Rozzi manipulation design applied to causal rather than
+          manipulative price moves.
+        </p>
+        <p>
+          The adversarial version is already documented. Prediction Laundering
+          (arXiv 2602.05181) sets out four stages by which a messy bet gets
+          scrubbed into authoritative truth: structural sanitization,
+          probabilistic flattening, architectural masking, epistemic hardening.
+          That is reflexivity with an interface on top, and almost nobody in this
+          space has engaged with the paper.
+        </p>
+      </section>
+
+      <section class="block">
+        <h2>Where I would start</h2>
+        <ol class="steps">
+          <li>
+            Pick one category where the loop is plausibly strong. Protocol
+            governance votes are the most accessible, since the price, the vote,
+            and the outcome are all on-chain.
+          </li>
+          <li>
+            Find an instrument for exogenous price movement. Large uninformed
+            orders, liquidity shocks, or resolution of a correlated but unrelated
+            market. Without one you cannot separate prediction from causation and
+            the study is not worth running.
+          </li>
+          <li>
+            Estimate the sign and rough magnitude of <code>f'</code> on that one
+            category. Even a crude estimate is new.
+          </li>
+          <li>
+            On the design side, write down one contract that damps the loop and
+            check whether it is still tradeable. A damped contract nobody wants to
+            trade is not a solution.
+          </li>
+        </ol>
+      </section>
+
+      <section class="block">
+        <h2>What counts as a result</h2>
+        <p class="result">
+          One category with an estimated response slope and an error bar. If
+          <code>f'</code> exceeds 1 anywhere, that has immediate consequences for
+          how large platforms should let those markets get.
+        </p>
+      </section>
+
+      <section class="block">
+        <h2>Related</h2>
+        <ul class="list">
+          <li>
+            <a class="a" href="/problems/calibration.html">06 Calibrated on average</a>
+            <span class="t">why calibration cannot detect this</span>
+          </li>
+          <li>
+            <a class="a" href="/problems/shadow-coordination.html">04 Thousands of traders, one opinion</a>
+            <span class="t">what removes the damping</span>
+          </li>
+          <li>
+            <a class="a" href="/problems/manipulation-ceiling.html">08 The thermometer costs $34,000</a>
+            <span class="t">the same loop through a different channel</span>
+          </li>
+        </ul>
+      </section>
+
+      <nav class="pnav">
+        <a href="/problems/who-pays.html">
+          <span class="dir">Previous</span>02 Nobody buys the answer
+        </a>
+        <a class="next" href="/problems/shadow-coordination.html">
+          <span class="dir">Next</span>04 Thousands of traders, one opinion
+        </a>
+      </nav>
+      </main>
+    </div>
+  </body>
+</html>

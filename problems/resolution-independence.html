@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The referee holds a position · Open Problems</title>
+    <meta name="description" content="UMA's oracle resolves Polymarket disputes by token vote, and voters can hold the outcome they vote on. A $7M and a $237M dispute later, this is still the design." />
+    <link rel="canonical" href="https://adamszymanski.xyz/problems/resolution-independence.html" />
+    <meta name="theme-color" content="#050505" />
+    <meta name="color-scheme" content="dark" />
+
+    <link rel="icon" type="image/x-icon" href="/assets/favicon/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png" />
+
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Adam Szymański" />
+    <meta property="og:title" content="The referee holds a position" />
+    <meta property="og:description" content="Every optimistic oracle has a market size above which it is corruptible. Nobody has written down where that is." />
+    <meta property="og:url" content="https://adamszymanski.xyz/problems/resolution-independence.html" />
+    <meta property="og:image" content="https://adamszymanski.xyz/assets/og/og-image.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:creator" content="@a_szymanski_" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,300;1,6..72,400&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <div class="page doc" data-theme="dark">
+      <!-- Settled theme colour; no wash needed, this section is always dark -->
+      <div class="theme-base" aria-hidden="true"></div>
+
+      <!-- Ambient background: same drifting light-pools + grain as the homepage -->
+      <div class="bg" aria-hidden="true">
+        <div class="flare flare-1"></div>
+        <div class="flare flare-2"></div>
+        <div class="grain"></div>
+      </div>
+
+      <!-- Fixed signature, links home -->
+      <a class="sig-link" href="/" aria-label="Adam Szymański — home">
+        <img src="/assets/signature.webp" alt="Adam Szymański" />
+      </a>
+
+      <!-- Desktop rail: site-level, not homepage sections -->
+      <nav class="rail docrail" aria-label="Site">
+        <a href="/"><span class="bar" aria-hidden="true"></span>Index</a>
+        <a href="/problems/" class="active"><span class="bar" aria-hidden="true"></span>Problems</a>
+      </nav>
+
+      <main class="doc-main">
+      <nav class="crumb">
+        <a href="/">Adam Szymański</a><span class="slash">/</span><a href="/problems/">Problems</a><span class="slash">/</span>07
+      </nav>
+
+      <header class="top">
+        <p class="eyebrow">Problem 07 · Resolution independence</p>
+        <h1 class="ptitle">The referee holds a <em>position</em>.</h1>
+        <p class="standfirst">
+          Polymarket disputes are settled by a vote of token holders, and those
+          voters can hold the outcome they are voting on. A $7M and a $237M dispute
+          later, this is a known and unfixed design.
+        </p>
+        <div class="tagrow">
+          <span class="tag">Mechanism design</span>
+          <span class="tag">Auditable today</span>
+          <span class="tag">Highest leverage</span>
+        </div>
+      </header>
+
+      <section class="tier tier-1">
+        <h2>Simple <span class="h2note">assumes nothing</span></h2>
+        <p>
+          Someone has to decide who won the bet. On most crypto prediction markets
+          that decision is made by a vote of token holders, and nothing stops those
+          voters from holding a position in the market they are ruling on.
+        </p>
+        <p>
+          This has already gone wrong at scale. A $7M market on Ukraine and a $237M
+          market on Zelenskyy both resolved in ways the losing side considered a
+          plain conflict of interest.
+        </p>
+        <p>
+          The deeper issue is that the rules are written by hand. What counts as "a
+          ceasefire" or "wearing a suit" comes down to a sentence somebody typed,
+          and every dispute is really an argument about that sentence. The entire
+          market rests on it, and it gets the least attention of anything in the
+          system.
+        </p>
+      </section>
+
+      <section class="tier tier-2">
+        <h2>Moderate <span class="h2note">assumes you know what a market is</span></h2>
+        <p>
+          Optimistic oracles work by Schelling point. Anyone proposes an answer,
+          anyone can dispute it, and the dispute goes to a vote where honest
+          reporting is meant to be the focal strategy. The assumption is that
+          voters have more at stake in the token than in any single market. When one
+          market is worth $237M and the voting stake is worth less, the assumption
+          fails, and it fails predictably rather than by accident.
+        </p>
+        <p>
+          Patching the voting mechanism treats the symptom. Carroll mechanisms are
+          the more interesting direction: alongside trading the outcome, you trade
+          the resolution criterion itself. The rule's interpretation becomes a
+          priced object, so ambiguity appears as a spread you can see in advance
+          rather than a dispute you discover afterwards. Almost nobody is writing
+          about this and there is no implementation anywhere.
+        </p>
+        <p>
+          Resolution is also where the leverage is. Everything downstream, AMM
+          design, UX, aggregation layers, is premature optimization while the
+          settlement layer can be bought.
+        </p>
+      </section>
+
+      <section class="tier tier-3">
+        <h2>Technical <span class="h2note">state of the art and the gap</span></h2>
+        <p>
+          The failure condition is simple to state. Let <code>V</code> be the value
+          of a voter's stake in the oracle token and <code>M</code> their position
+          in the disputed market. Honest voting is incentive compatible only while
+          the discounted cost of token value loss exceeds <code>M</code>. Since
+          <code>M</code> is unbounded and <code>V</code> is fixed, every optimistic
+          oracle has a market size above which it is corruptible. UMIP-189 raised
+          the cost of attack without changing that structure.
+        </p>
+        <p>
+          Three directions are open. Bonded resolution with position disclosure,
+          where voters prove no exposure, which is checkable on-chain and defeated
+          by proxies. LLM proposers, already live through UMA's OOTruthBot at around
+          $0.005 per query, which moves the bottleneck from incentive to
+          reflexivity once the same model class also trades the market. And Carroll
+          mechanisms, where the criterion is the traded object.
+        </p>
+        <p>
+          The genuinely under-attacked piece is formal. Nobody has stated the
+          general incentive-compatibility condition for a resolution mechanism as a
+          function of market size. That statement, with the bound made explicit, is
+          the paper, and it is a whiteboard problem rather than a data problem.
+        </p>
+      </section>
+
+      <section class="block">
+        <h2>Where I would start</h2>
+        <ol class="steps">
+          <li>
+            Write the incentive-compatibility condition down as a function of market
+            size. No data, no permission, no infrastructure. It does not exist in
+            the literature and it should.
+          </li>
+          <li>
+            Audit historical UMA DVM votes against the on-chain positions of the
+            voting addresses. Whether referees hold positions is a checkable fact
+            and nobody has published the check.
+          </li>
+          <li>
+            Write the first proper explainer on Carroll mechanisms. Coverage is
+            close to zero, and the first clear treatment of a mechanism becomes the
+            reference everyone links to.
+          </li>
+          <li>
+            Build a toy market where the resolution criterion is itself traded, then
+            watch what the criterion's price does as the event approaches. That
+            behaviour has never been observed.
+          </li>
+        </ol>
+      </section>
+
+      <section class="block">
+        <h2>What counts as a result</h2>
+        <p class="result">
+          Either an audit showing measured overlap between voters and positions, or
+          the general size bound above which an optimistic oracle stops being
+          trustworthy. Both are publishable and neither needs anyone's
+          cooperation.
+        </p>
+      </section>
+
+      <section class="block">
+        <h2>Related</h2>
+        <ul class="list">
+          <li>
+            <a class="a" href="/problems/manipulation-ceiling.html">08 The thermometer costs $34,000</a>
+            <span class="t">the same bound through physical measurement</span>
+          </li>
+          <li>
+            <a class="a" href="/problems/subsidies.html">01 Every market is on life support</a>
+            <span class="t">why spec quality may beat liquidity</span>
+          </li>
+          <li>
+            <a class="a" href="/problems/shadow-coordination.html">04 Thousands of traders, one opinion</a>
+            <span class="t">what happens when the oracle and the traders share a model</span>
+          </li>
+        </ul>
+      </section>
+
+      <nav class="pnav">
+        <a href="/problems/calibration.html">
+          <span class="dir">Previous</span>06 Calibrated on average
+        </a>
+        <a class="next" href="/problems/manipulation-ceiling.html">
+          <span class="dir">Next</span>08 The thermometer costs $34,000
+        </a>
+      </nav>
+      </main>
+    </div>
+  </body>
+</html>

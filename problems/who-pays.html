@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nobody buys the answer · Open Problems</title>
+    <meta name="description" content="Prediction markets produce a probability that beats most experts, and there is no customer for it. Finding the buyer is a research problem, not a sales problem." />
+    <link rel="canonical" href="https://adamszymanski.xyz/problems/who-pays.html" />
+    <meta name="theme-color" content="#050505" />
+    <meta name="color-scheme" content="dark" />
+
+    <link rel="icon" type="image/x-icon" href="/assets/favicon/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png" />
+
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Adam Szymański" />
+    <meta property="og:title" content="Nobody buys the answer" />
+    <meta property="og:description" content="Prediction markets produce a probability that beats most experts, and there is no customer for it." />
+    <meta property="og:url" content="https://adamszymanski.xyz/problems/who-pays.html" />
+    <meta property="og:image" content="https://adamszymanski.xyz/assets/og/og-image.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:creator" content="@a_szymanski_" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,300;1,6..72,400&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <div class="page doc" data-theme="dark">
+      <!-- Settled theme colour; no wash needed, this section is always dark -->
+      <div class="theme-base" aria-hidden="true"></div>
+
+      <!-- Ambient background: same drifting light-pools + grain as the homepage -->
+      <div class="bg" aria-hidden="true">
+        <div class="flare flare-1"></div>
+        <div class="flare flare-2"></div>
+        <div class="grain"></div>
+      </div>
+
+      <!-- Fixed signature, links home -->
+      <a class="sig-link" href="/" aria-label="Adam Szymański — home">
+        <img src="/assets/signature.webp" alt="Adam Szymański" />
+      </a>
+
+      <!-- Desktop rail: site-level, not homepage sections -->
+      <nav class="rail docrail" aria-label="Site">
+        <a href="/"><span class="bar" aria-hidden="true"></span>Index</a>
+        <a href="/problems/" class="active"><span class="bar" aria-hidden="true"></span>Problems</a>
+      </nav>
+
+      <main class="doc-main">
+      <nav class="crumb">
+        <a href="/">Adam Szymański</a><span class="slash">/</span><a href="/problems/">Problems</a><span class="slash">/</span>02
+      </nav>
+
+      <header class="top">
+        <p class="eyebrow">Problem 02 · Demand for the signal</p>
+        <h1 class="ptitle">Nobody buys the <em>answer</em>.</h1>
+        <p class="standfirst">
+          A prediction market produces a number that beats most experts. There is
+          no customer for it. Until there is, every market is entertainment with a
+          subsidy attached.
+        </p>
+        <div class="tagrow">
+          <span class="tag">Economics</span>
+          <span class="tag">Mechanism design</span>
+          <span class="tag">Needs one real buyer</span>
+        </div>
+      </header>
+
+      <section class="tier tier-1">
+        <h2>Simple <span class="h2note">assumes nothing</span></h2>
+        <p>
+          The output of a prediction market is a probability, and it is usually
+          more accurate than polls, pundits, or a company's internal forecast.
+          Nobody pays for it.
+        </p>
+        <p>
+          The fees come from people who want action, not from people who want the
+          number. So the market lives on gambling demand and investor money, and
+          the accuracy is a side effect nobody has ever bought.
+        </p>
+        <p>
+          Compare it to a credit rating. Someone pays for that, which is the
+          entire reason the rating industry exists. Prediction markets have the
+          better product and no buyer. Finding the buyer is a research problem
+          rather than a sales problem, because the market probably has to be built
+          differently to produce something anyone would pay for.
+        </p>
+      </section>
+
+      <section class="tier tier-2">
+        <h2>Moderate <span class="h2note">assumes you know what a market is</span></h2>
+        <p>
+          The demand side is empty because the product is generic. A public
+          probability on a public event is a public good. Whoever funds it cannot
+          capture it, and everyone else reads the price for free. That is the
+          structural reason there is no revenue, and better marketing does not
+          touch it.
+        </p>
+        <p>
+          Two escapes exist. Make the signal excludable, which means private or
+          delayed markets where the price itself is the product you sell.
+          Financial data has worked this way for decades. Or make the signal
+          decision-relevant to a specific principal who will pay to have their own
+          uncertainty reduced. An insurer pricing a novel risk. A government
+          evaluating a programme. A company choosing between two launches.
+        </p>
+        <p>
+          The second escape is the interesting one, because the buyer has a
+          decision, the decision has a cost of being wrong, and a market can be
+          pointed at exactly that. It has also never been built and closed with a
+          paying customer. Corporate prediction markets were tried at HP, Google,
+          and Ford. They worked, and they were shut down anyway, which is a fact
+          worth understanding before rebuilding them.
+        </p>
+      </section>
+
+      <section class="tier tier-3">
+        <h2>Technical <span class="h2note">state of the art and the gap</span></h2>
+        <p>
+          This is an information-goods failure. Prices are non-excludable and
+          non-rival, so the private return to funding a market sits far below the
+          social return, and the equilibrium provision is roughly what we observe,
+          which is close to zero paid provision.
+        </p>
+        <p>
+          Hanson's decision markets are the canonical answer. Condition the
+          contract on a decision and the principal pays, because the conditional
+          price is an input they cannot get anywhere else. That runs straight into
+          decision-selection bias, which means the payment channel and the
+          mechanism defect are the same problem seen from two sides. Solving one
+          without the other does not produce a customer.
+        </p>
+        <p>
+          The specific open quantity: willingness to pay for a conditional
+          probability, as a function of the decision's stakes and the principal's
+          prior uncertainty. A value-of-information calculation gives the upper
+          bound in an afternoon. Nobody has measured the actual number for any
+          real buyer, so "who pays for the signal" stays rhetorical rather than
+          empirical.
+        </p>
+        <p>
+          One adjacent buyer is underexplored and already consuming market data.
+          The CGV thesis frames prediction market prices as a grounding layer for
+          AI systems, calibrated priors piped into model context, and RSS3's MCP
+          server already does the piping. That buyer has budget and a decision
+          loop.
+        </p>
+      </section>
+
+      <section class="block">
+        <h2>Where I would start</h2>
+        <ol class="steps">
+          <li>
+            Pick one buyer type and get one real conversation. Insurance
+            underwriters and internal corporate forecasting teams are the two
+            most reachable without introductions.
+          </li>
+          <li>
+            Compute the value of information for their actual decision. Stakes
+            times the probability shift a market could plausibly deliver. If the
+            number comes out small, that buyer is wrong and you learned it in a
+            day.
+          </li>
+          <li>
+            Read the post-mortems on HP, Google, and Ford. They shut down working
+            markets, and the reason is the real obstacle rather than accuracy.
+          </li>
+          <li>
+            Test the excludability route as a control. Would a delayed public feed
+            with a paid real-time tier clear? That is exactly how market data
+            sells today.
+          </li>
+        </ol>
+      </section>
+
+      <section class="block">
+        <h2>What counts as a result</h2>
+        <p class="result">
+          One documented buyer with a number attached to what they would pay. One
+          is enough to change the conversation, because the current count is
+          zero.
+        </p>
+      </section>
+
+      <section class="block">
+        <h2>Related</h2>
+        <ul class="list">
+          <li>
+            <a class="a" href="/problems/subsidies.html">01 Every market is on life support</a>
+            <span class="t">the other half of the same hole</span>
+          </li>
+          <li>
+            <a class="a" href="/problems/decision-selection-bias.html">09 Decision markets answer the wrong question</a>
+            <span class="t">why the obvious buyer cannot be served yet</span>
+          </li>
+          <li>
+            <a class="a" href="/problems/calibration.html">06 Calibrated on average</a>
+            <span class="t">what a buyer needs before paying</span>
+          </li>
+        </ul>
+      </section>
+
+      <nav class="pnav">
+        <a href="/problems/subsidies.html">
+          <span class="dir">Previous</span>01 Every market is on life support
+        </a>
+        <a class="next" href="/problems/reflexivity.html">
+          <span class="dir">Next</span>03 The price moves the thing it prices
+        </a>
+      </nav>
+      </main>
+    </div>
+  </body>
+</html>

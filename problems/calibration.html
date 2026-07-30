@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calibrated on average · Open Problems</title>
+    <meta name="description" content="Prediction markets are defended with a portfolio statistic used as though it described each market. Nobody can tell you whether the one in front of you is trustworthy." />
+    <link rel="canonical" href="https://adamszymanski.xyz/problems/calibration.html" />
+    <meta name="theme-color" content="#050505" />
+    <meta name="color-scheme" content="dark" />
+
+    <link rel="icon" type="image/x-icon" href="/assets/favicon/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png" />
+
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Adam Szymański" />
+    <meta property="og:title" content="Calibrated on average" />
+    <meta property="og:description" content="Calibration is a property of a portfolio of markets, used as though it were a property of each one." />
+    <meta property="og:url" content="https://adamszymanski.xyz/problems/calibration.html" />
+    <meta property="og:image" content="https://adamszymanski.xyz/assets/og/og-image.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:creator" content="@a_szymanski_" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,300;1,6..72,400&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <div class="page doc" data-theme="dark">
+      <!-- Settled theme colour; no wash needed, this section is always dark -->
+      <div class="theme-base" aria-hidden="true"></div>
+
+      <!-- Ambient background: same drifting light-pools + grain as the homepage -->
+      <div class="bg" aria-hidden="true">
+        <div class="flare flare-1"></div>
+        <div class="flare flare-2"></div>
+        <div class="grain"></div>
+      </div>
+
+      <!-- Fixed signature, links home -->
+      <a class="sig-link" href="/" aria-label="Adam Szymański — home">
+        <img src="/assets/signature.webp" alt="Adam Szymański" />
+      </a>
+
+      <!-- Desktop rail: site-level, not homepage sections -->
+      <nav class="rail docrail" aria-label="Site">
+        <a href="/"><span class="bar" aria-hidden="true"></span>Index</a>
+        <a href="/problems/" class="active"><span class="bar" aria-hidden="true"></span>Problems</a>
+      </nav>
+
+      <main class="doc-main">
+      <nav class="crumb">
+        <a href="/">Adam Szymański</a><span class="slash">/</span><a href="/problems/">Problems</a><span class="slash">/</span>06
+      </nav>
+
+      <header class="top">
+        <p class="eyebrow">Problem 06 · Calibration</p>
+        <h1 class="ptitle">Calibrated on <em>average</em>.</h1>
+        <p class="standfirst">
+          Prediction markets are defended as well calibrated. Calibration varies
+          enormously by domain, horizon, and liquidity. The average is doing a lot
+          of hiding.
+        </p>
+        <div class="tagrow">
+          <span class="tag">Empirical</span>
+          <span class="tag">Ships as an API</span>
+          <span class="tag">Prerequisite for revenue</span>
+        </div>
+      </header>
+
+      <section class="tier tier-1">
+        <h2>Simple <span class="h2note">assumes nothing</span></h2>
+        <p>
+          The standard defence of prediction markets is that when they say 70%, the
+          thing happens about 70% of the time. Averaged over everything, that is
+          roughly true.
+        </p>
+        <p>
+          Averages hide a lot. A heavily traded sports market with unambiguous
+          rules behaves nothing like a thin market on a geopolitical event a year
+          out. The first is close to a fair price. The second can be badly wrong and
+          still sit inside the overall average, because the good markets carry it.
+        </p>
+        <p>
+          For anyone who wants to use a price to make a decision, the average is
+          useless. You need to know whether this market, on this kind of question,
+          at this liquidity, is worth trusting. Nobody can currently tell you.
+        </p>
+      </section>
+
+      <section class="tier tier-2">
+        <h2>Moderate <span class="h2note">assumes you know what a market is</span></h2>
+        <p>
+          Aggregate calibration is the wrong statistic to publish. It describes a
+          portfolio of markets and gets quoted as though it described each one.
+        </p>
+        <p>
+          Le (2026), "Decomposing Crowd Wisdom", is the state of the art. Across
+          292 million Kalshi and Polymarket trades it breaks calibration into four
+          components that together explain 87% of the variance. That is the shape
+          of the answer, and what it establishes is that calibration is predictable
+          from observable market features. A per-market trust score is therefore
+          buildable, and nobody has built one.
+        </p>
+        <p>
+          The missing pieces are practical. Time to resolution interacts with
+          everything, since long-horizon markets have unresolved information and
+          thin books. Favourite-longshot bias shows up in some categories and not
+          others. And nobody has produced the thing a decision maker actually needs,
+          which is a function from market features to an expected error bar on the
+          price.
+        </p>
+      </section>
+
+      <section class="tier tier-3">
+        <h2>Technical <span class="h2note">state of the art and the gap</span></h2>
+        <p>
+          Calibration should be estimated conditionally. Instead of
+          <code>E[outcome | price] = price</code> globally, estimate it per
+          stratum: category, liquidity depth, time to resolution, participant
+          composition, resolution-source type. Le's four-component decomposition is
+          the reference point, and the open work is turning a variance
+          decomposition into a predictive model with out-of-sample validation.
+        </p>
+        <p>
+          Two specific gaps. Nobody has separated calibration error caused by thin
+          liquidity from error caused by resolution ambiguity, and those call for
+          different fixes, one financial and one editorial. And no published work
+          conditions on agent share, which connects straight to the correlation
+          problem: if <code>ρ</code> is rising, calibration in agent-dense
+          categories should be degrading measurably, and that is a testable
+          prediction sitting in public data right now.
+        </p>
+        <p>
+          Deliverable shape: a trust score served per market, of the form "expected
+          absolute deviation from the true probability, given these features". Any
+          buyer of this signal needs that number before they can price the signal
+          at all, which puts this problem underneath the revenue problem rather
+          than beside it.
+        </p>
+      </section>
+
+      <section class="block">
+        <h2>Where I would start</h2>
+        <ol class="steps">
+          <li>
+            Read Le (2026) and reproduce the decomposition on a smaller sample.
+            Reproduction tells you quickly whether the data is workable.
+          </li>
+          <li>
+            Build the crudest possible trust score. Regress absolute price error on
+            liquidity, time to resolution, and category. Validate out of sample.
+            Crude and validated beats sophisticated and unvalidated.
+          </li>
+          <li>
+            Add agent share as a feature. That is the link to problem 04 and nobody
+            has tested it.
+          </li>
+          <li>
+            Ship it as an API before writing it up. A score people can query gets
+            used, and use produces feedback that a paper never will.
+          </li>
+        </ol>
+      </section>
+
+      <section class="block">
+        <h2>What counts as a result</h2>
+        <p class="result">
+          A per-market expected error, validated out of sample. That is the missing
+          prerequisite for anyone paying for prediction market data, and it is the
+          most directly useful thing on this list.
+        </p>
+      </section>
+
+      <section class="block">
+        <h2>Related</h2>
+        <ul class="list">
+          <li>
+            <a class="a" href="/problems/who-pays.html">02 Nobody buys the answer</a>
+            <span class="t">the problem this unblocks</span>
+          </li>
+          <li>
+            <a class="a" href="/problems/reflexivity.html">03 The price moves the thing it prices</a>
+            <span class="t">what calibration cannot detect</span>
+          </li>
+          <li>
+            <a class="a" href="/problems/wash-trading.html">05 Most of the volume is decoration</a>
+            <span class="t">clean the inputs first</span>
+          </li>
+        </ul>
+      </section>
+
+      <nav class="pnav">
+        <a href="/problems/wash-trading.html">
+          <span class="dir">Previous</span>05 Most of the volume is decoration
+        </a>
+        <a class="next" href="/problems/resolution-independence.html">
+          <span class="dir">Next</span>07 The referee holds a position
+        </a>
+      </nav>
+      </main>
+    </div>
+  </body>
+</html>

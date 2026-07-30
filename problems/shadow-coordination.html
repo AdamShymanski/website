@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Thousands of traders, one opinion · Open Problems</title>
+    <meta name="description" content="AI agents are around a third of Polymarket activity, trained on overlapping data. They never coordinate and they move as one. Crowd wisdom needs independent errors." />
+    <link rel="canonical" href="https://adamszymanski.xyz/problems/shadow-coordination.html" />
+    <meta name="theme-color" content="#050505" />
+    <meta name="color-scheme" content="dark" />
+
+    <link rel="icon" type="image/x-icon" href="/assets/favicon/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png" />
+
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Adam Szymański" />
+    <meta property="og:title" content="Thousands of traders, one opinion" />
+    <meta property="og:description" content="AI agents are around a third of Polymarket activity, trained on overlapping data. They never coordinate and they move as one." />
+    <meta property="og:url" content="https://adamszymanski.xyz/problems/shadow-coordination.html" />
+    <meta property="og:image" content="https://adamszymanski.xyz/assets/og/og-image.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:creator" content="@a_szymanski_" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,300;1,6..72,400&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <div class="page doc" data-theme="dark">
+      <!-- Settled theme colour; no wash needed, this section is always dark -->
+      <div class="theme-base" aria-hidden="true"></div>
+
+      <!-- Ambient background: same drifting light-pools + grain as the homepage -->
+      <div class="bg" aria-hidden="true">
+        <div class="flare flare-1"></div>
+        <div class="flare flare-2"></div>
+        <div class="grain"></div>
+      </div>
+
+      <!-- Fixed signature, links home -->
+      <a class="sig-link" href="/" aria-label="Adam Szymański — home">
+        <img src="/assets/signature.webp" alt="Adam Szymański" />
+      </a>
+
+      <!-- Desktop rail: site-level, not homepage sections -->
+      <nav class="rail docrail" aria-label="Site">
+        <a href="/"><span class="bar" aria-hidden="true"></span>Index</a>
+        <a href="/problems/" class="active"><span class="bar" aria-hidden="true"></span>Problems</a>
+      </nav>
+
+      <main class="doc-main">
+      <nav class="crumb">
+        <a href="/">Adam Szymański</a><span class="slash">/</span><a href="/problems/">Problems</a><span class="slash">/</span>04
+      </nav>
+
+      <header class="top">
+        <p class="eyebrow">Problem 04 · Latent shadow coordination</p>
+        <h1 class="ptitle">Thousands of traders, one <em>opinion</em>.</h1>
+        <p class="standfirst">
+          AI agents are around a third of Polymarket activity and 14 of the top 20
+          wallets. They are trained on overlapping data, so they reach the same
+          conclusion separately. They never coordinate and they move as one.
+        </p>
+        <div class="tagrow">
+          <span class="tag">Empirical</span>
+          <span class="tag">Public on-chain data</span>
+          <span class="tag">Contrarian result available</span>
+        </div>
+      </header>
+
+      <section class="tier tier-1">
+        <h2>Simple <span class="h2note">assumes nothing</span></h2>
+        <p>
+          The reason a crowd beats an expert is that people are wrong in different
+          directions. The errors cancel out and what survives is signal. This only
+          works when the mistakes are independent.
+        </p>
+        <p>
+          Most of the money on Polymarket now belongs to bots. Bots built on
+          similar models, reading similar sources, trained on overlapping data.
+          They do not talk to each other, and they do not need to. Given the same
+          inputs they produce the same answer, so they buy at the same moment and
+          sell at the same moment.
+        </p>
+        <p>
+          A market like that looks busy and liquid. What it contains is one opinion
+          held with a great deal of money, wearing a crowd's costume. If the
+          opinion is wrong, nothing inside the market corrects it.
+        </p>
+      </section>
+
+      <section class="tier tier-2">
+        <h2>Moderate <span class="h2note">assumes you know what a market is</span></h2>
+        <p>
+          Crowd aggregation rests on error independence. Correlate the errors and
+          the effective number of independent participants collapses. A market with
+          ten thousand traders whose errors correlate at 0.9 has the statistical
+          power of a handful of people.
+        </p>
+        <p>
+          Two consequences follow. Price quality degrades in a way volume cannot
+          reveal, because volume rises while independence falls. And the market
+          becomes fragile: one news headline parsed the same way by every model
+          moves every agent in the same direction at once, with no natural
+          counterparty on the other side. Individual rationality produces
+          collective fragility.
+        </p>
+        <p>
+          The usual story about bots on Polymarket is efficiency. 37% of agents are
+          profitable against 7 to 13% of humans, so the smart money is automated
+          and the market is better for it. The correlation reading takes the same
+          numbers and concludes the opposite. Both stories fit everything published
+          so far, which is why this needs measuring rather than arguing.
+        </p>
+      </section>
+
+      <section class="tier tier-3">
+        <h2>Technical <span class="h2note">state of the art and the gap</span></h2>
+        <p>
+          Under a standard aggregation model the variance of the crowd estimate
+          scales with <code>1/n_eff</code>, where
+          <code>n_eff = n / (1 + (n-1)ρ)</code> for pairwise error correlation
+          <code>ρ</code>. As <code>n</code> grows, <code>n_eff</code> tends to
+          <code>1/ρ</code>. The ceiling is set by correlation and not by
+          participation, so growth in agent count buys nothing once <code>ρ</code>
+          is bounded away from zero.
+        </p>
+        <p>
+          Everything empirical here is open. Nobody has estimated <code>ρ</code>
+          across the agent population on any venue, and the data is sitting there:
+          Polymarket trades are on-chain, wallets are clusterable, and agent
+          wallets are partially identifiable through timing regularity and API
+          signatures. A first result is a time series of <code>ρ</code>, and the
+          question worth answering is whether it rises as agent share rises.
+        </p>
+        <p>
+          Then the mechanism question. If <code>ρ</code> is high, what restores
+          independence? Sybil resistance does not help, because these are distinct
+          entities with correlated priors rather than one entity with many keys.
+          Candidates: reward schemes paying for being early and contrarian rather
+          than merely correct, diversity requirements on market maker
+          counterparties, or subsidising human participation as decorrelating
+          noise. All speculative, none tried.
+        </p>
+        <p>
+          Note the interaction with meta-markets. Trader correlation is a parameter
+          in the recursive tower, and correlated agents are the most plausible
+          mechanism for pushing that tower out of convergence and into
+          oscillation.
+        </p>
+      </section>
+
+      <section class="block">
+        <h2>Where I would start</h2>
+        <ol class="steps">
+          <li>
+            Cluster Polymarket wallets by trade timing and fill patterns. Agent
+            wallets leave regular signatures. This is public on-chain data and
+            needs nobody's permission.
+          </li>
+          <li>
+            Estimate pairwise error correlation inside the agent cluster on
+            resolved markets, where error is the wallet's implied probability minus
+            the realised outcome.
+          </li>
+          <li>
+            Plot <code>ρ</code> against agent share over time. If both are rising,
+            the efficiency story about bots is incomplete and you have the
+            result.
+          </li>
+          <li>
+            Read the Prediction Arena paper (arXiv 2604.07355), which ran six
+            frontier models on Kalshi and Polymarket with real $10K accounts for 57
+            days. If their errors correlate in that controlled setting, the
+            mechanism is confirmed at small scale before you fight the on-chain
+            data.
+          </li>
+        </ol>
+      </section>
+
+      <section class="block">
+        <h2>What counts as a result</h2>
+        <p class="result">
+          A time series of <code>ρ</code>. That single plot decides whether the bot
+          takeover is making these markets sharper or quietly worse, and nobody
+          has drawn it.
+        </p>
+      </section>
+
+      <section class="block">
+        <h2>Related</h2>
+        <ul class="list">
+          <li>
+            <a class="a" href="/problems/calibration.html">06 Calibrated on average</a>
+            <span class="t">where the degradation would show up</span>
+          </li>
+          <li>
+            <a class="a" href="/problems/meta-markets.html">10 A market on how wrong the market is</a>
+            <span class="t">correlation as the parameter that breaks the tower</span>
+          </li>
+          <li>
+            <a class="a" href="/problems/reflexivity.html">03 The price moves the thing it prices</a>
+            <span class="t">a feedback loop with no damping left</span>
+          </li>
+        </ul>
+      </section>
+
+      <nav class="pnav">
+        <a href="/problems/reflexivity.html">
+          <span class="dir">Previous</span>03 The price moves the thing it prices
+        </a>
+        <a class="next" href="/problems/wash-trading.html">
+          <span class="dir">Next</span>05 Most of the volume is decoration
+        </a>
+      </nav>
+      </main>
+    </div>
+  </body>
+</html>

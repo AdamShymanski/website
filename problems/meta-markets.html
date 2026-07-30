@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>A market on how wrong the market is · Open Problems</title>
+    <meta name="description" content="Layer one prices the event. Layer two prices whether layer one is right. Layer three prices layer two. Nobody knows whether that tower converges, oscillates, or collapses." />
+    <link rel="canonical" href="https://adamszymanski.xyz/problems/meta-markets.html" />
+    <meta name="theme-color" content="#050505" />
+    <meta name="color-scheme" content="dark" />
+
+    <link rel="icon" type="image/x-icon" href="/assets/favicon/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png" />
+
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Adam Szymański" />
+    <meta property="og:title" content="A market on how wrong the market is" />
+    <meta property="og:description" content="Recursive meta-markets. Converge to truth, oscillate forever, or collapse into noise. Nobody has built one to find out." />
+    <meta property="og:url" content="https://adamszymanski.xyz/problems/meta-markets.html" />
+    <meta property="og:image" content="https://adamszymanski.xyz/assets/og/og-image.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:creator" content="@a_szymanski_" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,300;1,6..72,400&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <div class="page doc" data-theme="dark">
+      <!-- Settled theme colour; no wash needed, this section is always dark -->
+      <div class="theme-base" aria-hidden="true"></div>
+
+      <!-- Ambient background: same drifting light-pools + grain as the homepage -->
+      <div class="bg" aria-hidden="true">
+        <div class="flare flare-1"></div>
+        <div class="flare flare-2"></div>
+        <div class="grain"></div>
+      </div>
+
+      <!-- Fixed signature, links home -->
+      <a class="sig-link" href="/" aria-label="Adam Szymański — home">
+        <img src="/assets/signature.webp" alt="Adam Szymański" />
+      </a>
+
+      <!-- Desktop rail: site-level, not homepage sections -->
+      <nav class="rail docrail" aria-label="Site">
+        <a href="/"><span class="bar" aria-hidden="true"></span>Index</a>
+        <a href="/problems/" class="active"><span class="bar" aria-hidden="true"></span>Problems</a>
+      </nav>
+
+      <main class="doc-main">
+      <nav class="crumb">
+        <a href="/">Adam Szymański</a><span class="slash">/</span><a href="/problems/">Problems</a><span class="slash">/</span>10
+      </nav>
+
+      <header class="top">
+        <p class="eyebrow">Problem 10 · Recursive meta-markets</p>
+        <h1 class="ptitle">A market on how wrong the market <em>is</em>.</h1>
+        <p class="standfirst">
+          Layer one prices an event. Layer two prices whether layer one is accurate.
+          Layer three prices layer two. Nobody knows whether that tower converges to
+          truth, oscillates forever, or collapses into noise.
+        </p>
+        <div class="tagrow">
+          <span class="tag">Theory</span>
+          <span class="tag">Simulation</span>
+          <span class="tag">My pick</span>
+        </div>
+      </header>
+
+      <section class="tier tier-1">
+        <h2>Simple <span class="h2note">assumes nothing</span></h2>
+        <p>
+          A prediction market gives you a probability. The natural next question is
+          how much to trust it, and the prediction market answer to any question is
+          to open a market on it. So you open a second market on whether the first
+          one is close to right.
+        </p>
+        <p>
+          Then the same question applies to the second market, so you open a third.
+          You can keep going as long as you like. The structure loops back on itself,
+          which is where it stops being a gimmick.
+        </p>
+        <p>
+          Three things could happen. Each layer corrects the one beneath it and the
+          whole tower settles on the truth, which would be a self-healing oracle and
+          genuinely useful. Or the layers push each other back and forth and never
+          settle. Or noise compounds upward until the whole thing means nothing.
+          Nobody has built one to find out.
+        </p>
+      </section>
+
+      <section class="tier tier-2">
+        <h2>Moderate <span class="h2note">assumes you know what a market is</span></h2>
+        <p>
+          Concretely: layer 0 is a real event. Layer 1 is an LMSR market on that
+          event. Layer 2 is an LMSR market on whether layer 1's terminal price lands
+          within 5% of the true probability. Layer 3 prices layer 2's accuracy. Each
+          layer's resolution depends on the layer below, so information flows up and
+          incentives flow down.
+        </p>
+        <p>
+          Reframed, layer 2 is trading the volatility of a probability rather than an
+          outcome. A VIX for prediction markets. That framing turns it into a product
+          rather than only a theory question, which matters for whether anyone ever
+          trades it.
+        </p>
+        <p>
+          Four parameters should decide the behaviour: how many agents, how good
+          their information is, how much liquidity sits at each layer, and how
+          correlated the traders are. Correlation is the one I would watch, because
+          correlated traders are the most plausible route from convergence into
+          oscillation. Hanson flagged indefinitely recursive jury mechanisms as an
+          open question and left it there. This is my picked direction and I have
+          published nothing on it, which is the largest gap between what I have
+          thought about and what I have said out loud.
+        </p>
+      </section>
+
+      <section class="tier tier-3">
+        <h2>Technical <span class="h2note">state of the art and the gap</span></h2>
+        <p>
+          The formal question is whether the layer map is a contraction. If the map
+          from layer <code>n</code>'s price vector to layer <code>n+1</code>'s is a
+          contraction on a complete metric space, Banach gives a unique fixed point
+          and convergence from any starting configuration, which is the self-healing
+          oracle result. The conditions under which it contracts are unknown. LMSR's
+          cost function curvature is the obvious place to look, since <code>b</code>
+          controls how far a given order moves the price and therefore how strongly
+          one layer transmits to the next.
+        </p>
+        <p>
+          The result worth having is a phase diagram. Axes: agent count, information
+          quality, liquidity ratio between layers, trader correlation. Regions:
+          convergence, limit cycle, divergence. Finding and characterising that
+          boundary is the paper, in the same sense that a pressure-temperature
+          diagram is the answer for phase transitions in water.
+        </p>
+        <p>
+          Spec problems sit underneath all of it and need settling first. What exactly
+          does a layer 2 contract pay out on, over what horizon, and does the lag
+          between layers create an exploitable incentive? Is the relationship between
+          layers self-reference or principal-agent? Those choices change the
+          mechanism, so simulation results mean little until they are pinned down.
+        </p>
+        <p>
+          Smallest useful version: a three-layer toy in code with synthetic agents,
+          sweeping two parameters. A weekend for the first plot, a month for a
+          defensible one.
+        </p>
+      </section>
+
+      <section class="block">
+        <h2>Where I would start</h2>
+        <ol class="steps">
+          <li>
+            Build the three-layer toy. Synthetic agents, LMSR at each layer, layer 2
+            resolving against layer 1's terminal price. This is the whole thing in
+            about two hundred lines.
+          </li>
+          <li>
+            Sweep two parameters and look for a boundary. Agent count and trader
+            correlation are the pair I would start with, for the reason in problem
+            04.
+          </li>
+          <li>
+            Settle the contract spec before trusting any output. Payout definition,
+            horizon, and inter-layer lag all change the dynamics, so a result
+            without a stated spec is not a result.
+          </li>
+          <li>
+            Make it live and small on Manifold. "Will this market's calibration score
+            exceed X" is a real meta-market and takes an afternoon to open.
+          </li>
+        </ol>
+      </section>
+
+      <section class="block">
+        <h2>What counts as a result</h2>
+        <p class="result">
+          A phase diagram with a boundary on it, plus an interactive demo. The demo is
+          the contribution, and the essay writes itself once the plot exists. A paper
+          without the demo earns nothing.
+        </p>
+      </section>
+
+      <section class="block">
+        <h2>Related</h2>
+        <ul class="list">
+          <li>
+            <a class="a" href="/problems/shadow-coordination.html">04 Thousands of traders, one opinion</a>
+            <span class="t">the parameter most likely to break the tower</span>
+          </li>
+          <li>
+            <a class="a" href="/problems/calibration.html">06 Calibrated on average</a>
+            <span class="t">what layer 2 is actually pricing</span>
+          </li>
+          <li>
+            <a class="a" href="/problems/resolution-independence.html">07 The referee holds a position</a>
+            <span class="t">what a self-healing oracle would replace</span>
+          </li>
+        </ul>
+      </section>
+
+      <nav class="pnav">
+        <a href="/problems/decision-selection-bias.html">
+          <span class="dir">Previous</span>09 Decision markets answer the wrong question
+        </a>
+        <a class="next" href="/problems/combinatorial-makers.html">
+          <span class="dir">Next</span>11 Nobody can price a joint distribution
+        </a>
+      </nav>
+      </main>
+    </div>
+  </body>
+</html>

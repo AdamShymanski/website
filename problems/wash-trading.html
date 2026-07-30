@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Most of the volume is decoration · Open Problems</title>
+    <meta name="description" content="Wash trading estimates on prediction markets run from 15% to 95%. Every volume headline and every study using volume as a control sits on top of that." />
+    <link rel="canonical" href="https://adamszymanski.xyz/problems/wash-trading.html" />
+    <meta name="theme-color" content="#050505" />
+    <meta name="color-scheme" content="dark" />
+
+    <link rel="icon" type="image/x-icon" href="/assets/favicon/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png" />
+
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Adam Szymański" />
+    <meta property="og:title" content="Most of the volume is decoration" />
+    <meta property="og:description" content="Wash trading estimates on prediction markets run from 15% to 95%. Nobody knows the size of the industry they are describing." />
+    <meta property="og:url" content="https://adamszymanski.xyz/problems/wash-trading.html" />
+    <meta property="og:image" content="https://adamszymanski.xyz/assets/og/og-image.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:creator" content="@a_szymanski_" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,300;1,6..72,400&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <div class="page doc" data-theme="dark">
+      <!-- Settled theme colour; no wash needed, this section is always dark -->
+      <div class="theme-base" aria-hidden="true"></div>
+
+      <!-- Ambient background: same drifting light-pools + grain as the homepage -->
+      <div class="bg" aria-hidden="true">
+        <div class="flare flare-1"></div>
+        <div class="flare flare-2"></div>
+        <div class="grain"></div>
+      </div>
+
+      <!-- Fixed signature, links home -->
+      <a class="sig-link" href="/" aria-label="Adam Szymański — home">
+        <img src="/assets/signature.webp" alt="Adam Szymański" />
+      </a>
+
+      <!-- Desktop rail: site-level, not homepage sections -->
+      <nav class="rail docrail" aria-label="Site">
+        <a href="/"><span class="bar" aria-hidden="true"></span>Index</a>
+        <a href="/problems/" class="active"><span class="bar" aria-hidden="true"></span>Problems</a>
+      </nav>
+
+      <main class="doc-main">
+      <nav class="crumb">
+        <a href="/">Adam Szymański</a><span class="slash">/</span><a href="/problems/">Problems</a><span class="slash">/</span>05
+      </nav>
+
+      <header class="top">
+        <p class="eyebrow">Problem 05 · Volume integrity</p>
+        <h1 class="ptitle">Most of the volume is <em>decoration</em>.</h1>
+        <p class="standfirst">
+          Estimated wash trading went from around 15% to around 60% in a year, and
+          Columbia put it at 90 to 95% at category peaks. Every headline number is
+          built on this.
+        </p>
+        <div class="tagrow">
+          <span class="tag">Data</span>
+          <span class="tag">Unglamorous</span>
+          <span class="tag">Becomes the reference</span>
+        </div>
+      </header>
+
+      <section class="tier tier-1">
+        <h2>Simple <span class="h2note">assumes nothing</span></h2>
+        <p>
+          Volume is the number everyone quotes. It is also the easiest number to
+          fake. Trade with yourself across two wallets and you have produced
+          volume without producing an opinion.
+        </p>
+        <p>
+          People do this because platforms reward activity with tokens and
+          airdrops, so fake trading has a real payout. Estimates of how much
+          prediction market volume is wash trading run from about 15% a year ago to
+          around 60% now, and one Columbia study found 90 to 95% during the peaks
+          of popular categories.
+        </p>
+        <p>
+          This matters beyond honesty. Any claim that these markets are accurate,
+          liquid, or growing is measured in volume. Nobody has a clean number,
+          which means nobody currently knows the size of the industry they are
+          describing.
+        </p>
+      </section>
+
+      <section class="tier tier-2">
+        <h2>Moderate <span class="h2note">assumes you know what a market is</span></h2>
+        <p>
+          Wash trading has a straightforward detection surface on-chain. Circular
+          flows, matched sizes, wallet pairs with reciprocal fills, activity
+          clustered around incentive snapshots. Existing estimates use these
+          signatures and disagree by a factor of six, which tells you the
+          methodology is unsettled rather than that the truth is unknowable.
+        </p>
+        <p>
+          The consequence for research is worse than the consequence for marketing.
+          Every study of prediction market accuracy, reflexivity, or liquidity uses
+          volume as a control or a weight. If contamination is around 60% and
+          uneven across categories, results computed on raw volume are partly
+          measuring the incentive programme rather than the market.
+        </p>
+        <p>
+          There is no shared benchmark dataset with labelled wash trades. Building
+          one is unglamorous work that would immediately become the thing everyone
+          cites, which is a good trade for whoever wants a foothold in this field.
+        </p>
+      </section>
+
+      <section class="tier tier-3">
+        <h2>Technical <span class="h2note">state of the art and the gap</span></h2>
+        <p>
+          Frame it as classification on the trade graph. Nodes are wallets, edges
+          are fills, and the target is subgraphs whose net position change is near
+          zero while gross volume is large. Self-trading through an intermediary
+          makes this cycle detection with a tolerance parameter, and the hard cases
+          are collusive rings large enough to resemble organic flow.
+        </p>
+        <p>
+          The methodological gap is ground truth. Detection work validates against
+          heuristics rather than confirmed labels, which is precisely why estimates
+          span 15 to 95%. Two routes to labels exist. Incentive programme timing
+          gives quasi-experimental variation, since wash volume should collapse
+          when a reward ends while organic volume should not. And venues with no
+          incentive programme give a clean control for what natural circularity
+          looks like in the absence of a payout.
+        </p>
+        <p>
+          The target worth aiming at is a per-category, per-venue contamination
+          estimate with an error bar, published as a dataset. Then re-run one
+          existing accuracy result on cleaned volume and report whether it
+          survives. That second step is what turns plumbing into research.
+        </p>
+      </section>
+
+      <section class="block">
+        <h2>Where I would start</h2>
+        <ol class="steps">
+          <li>
+            Pull Polymarket trade history and build the wallet trade graph. Public,
+            on-chain, no gatekeeper, and a weekend of work.
+          </li>
+          <li>
+            Detect near-zero net position cycles carrying large gross volume. Start
+            with pairs, then triangles, then larger rings.
+          </li>
+          <li>
+            Use incentive programme start and stop dates as your natural
+            experiment. The discontinuity at the stop date is your best available
+            label.
+          </li>
+          <li>
+            Publish the labelled dataset before publishing any conclusions. The
+            dataset is the contribution that gets cited for years.
+          </li>
+        </ol>
+      </section>
+
+      <section class="block">
+        <h2>What counts as a result</h2>
+        <p class="result">
+          Contamination estimates per category with error bars, plus one existing
+          accuracy result re-run on cleaned data. If the result survives, the field
+          gets more confident. If it does not, that is more important.
+        </p>
+      </section>
+
+      <section class="block">
+        <h2>Related</h2>
+        <ul class="list">
+          <li>
+            <a class="a" href="/problems/shadow-coordination.html">04 Thousands of traders, one opinion</a>
+            <span class="t">the other reason volume misleads</span>
+          </li>
+          <li>
+            <a class="a" href="/problems/calibration.html">06 Calibrated on average</a>
+            <span class="t">what needs cleaning before it can be measured</span>
+          </li>
+        </ul>
+      </section>
+
+      <nav class="pnav">
+        <a href="/problems/shadow-coordination.html">
+          <span class="dir">Previous</span>04 Thousands of traders, one opinion
+        </a>
+        <a class="next" href="/problems/calibration.html">
+          <span class="dir">Next</span>06 Calibrated on average
+        </a>
+      </nav>
+      </main>
+    </div>
+  </body>
+</html>

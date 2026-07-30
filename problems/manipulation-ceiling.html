@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The thermometer costs $34,000 · Open Problems</title>
+    <meta name="description" content="Someone warmed a single weather sensor and swung a Polymarket outcome for about $34,000. That figure is the upper bound on how large that market could safely be." />
+    <link rel="canonical" href="https://adamszymanski.xyz/problems/manipulation-ceiling.html" />
+    <meta name="theme-color" content="#050505" />
+    <meta name="color-scheme" content="dark" />
+
+    <link rel="icon" type="image/x-icon" href="/assets/favicon/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png" />
+
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Adam Szymański" />
+    <meta property="og:title" content="The thermometer costs $34,000" />
+    <meta property="og:description" content="The cost of corrupting a resolution source is a load limit on the market. No platform publishes theirs." />
+    <meta property="og:url" content="https://adamszymanski.xyz/problems/manipulation-ceiling.html" />
+    <meta property="og:image" content="https://adamszymanski.xyz/assets/og/og-image.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:creator" content="@a_szymanski_" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,300;1,6..72,400&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <div class="page doc" data-theme="dark">
+      <!-- Settled theme colour; no wash needed, this section is always dark -->
+      <div class="theme-base" aria-hidden="true"></div>
+
+      <!-- Ambient background: same drifting light-pools + grain as the homepage -->
+      <div class="bg" aria-hidden="true">
+        <div class="flare flare-1"></div>
+        <div class="flare flare-2"></div>
+        <div class="grain"></div>
+      </div>
+
+      <!-- Fixed signature, links home -->
+      <a class="sig-link" href="/" aria-label="Adam Szymański — home">
+        <img src="/assets/signature.webp" alt="Adam Szymański" />
+      </a>
+
+      <!-- Desktop rail: site-level, not homepage sections -->
+      <nav class="rail docrail" aria-label="Site">
+        <a href="/"><span class="bar" aria-hidden="true"></span>Index</a>
+        <a href="/problems/" class="active"><span class="bar" aria-hidden="true"></span>Problems</a>
+      </nav>
+
+      <main class="doc-main">
+      <nav class="crumb">
+        <a href="/">Adam Szymański</a><span class="slash">/</span><a href="/problems/">Problems</a><span class="slash">/</span>08
+      </nav>
+
+      <header class="top">
+        <p class="eyebrow">Problem 08 · The manipulation ceiling</p>
+        <h1 class="ptitle">The thermometer costs <em>$34,000</em>.</h1>
+        <p class="standfirst">
+          Someone put a hair dryer near a weather sensor and swung a Polymarket
+          outcome for about $34,000. That number is not trivia. It is the upper
+          bound on how large that market could safely be.
+        </p>
+        <div class="tagrow">
+          <span class="tag">Security</span>
+          <span class="tag">Catalogue project</span>
+          <span class="tag">Immediately useful</span>
+        </div>
+      </header>
+
+      <section class="tier tier-1">
+        <h2>Simple <span class="h2note">assumes nothing</span></h2>
+        <p>
+          Every market settles against some measurement in the world. A temperature
+          reading, a vote count, an official announcement. If corrupting that
+          measurement is cheaper than the money riding on it, someone eventually
+          corrupts it.
+        </p>
+        <p>
+          This has happened. A Polymarket temperature market resolved against one
+          specific weather station, and warming that single sensor cost around
+          $34,000. Anyone with more than that at stake had a profitable attack
+          available to them.
+        </p>
+        <p>
+          So each resolution source has a price, and that price caps the size of any
+          market settling on it. Nobody publishes these caps. Markets get launched
+          without anyone asking what it would cost to lie to the thing they resolve
+          against.
+        </p>
+      </section>
+
+      <section class="tier tier-2">
+        <h2>Moderate <span class="h2note">assumes you know what a market is</span></h2>
+        <p>
+          This generalises into a design rule nobody applies. For a market resolving
+          on source S, define the corruption cost of S as what an attacker pays to
+          move it to a chosen value. Any open interest above that number is an
+          invitation. The Paris CDG case put it around $34,000 for a single
+          automated sensor, and physical sensors are the cheap end of the range.
+        </p>
+        <p>
+          The rule has teeth in two directions. A market's maximum safe size is a
+          property of its resolution source rather than of its liquidity or its
+          mechanism, which inverts how platforms think about scaling. And the route
+          to genuinely large markets runs through expensive-to-corrupt sources:
+          multi-source medians, official statistics carrying legal penalties for
+          falsification, aggregates over many independent measurements.
+        </p>
+        <p>
+          A related mechanism failure is worse and less known. Demski's entropy
+          market problem shows that a market paying out on rare events gives someone
+          an incentive to cause the rare event. Of three formulations, one remains
+          unsolved.
+        </p>
+      </section>
+
+      <section class="tier tier-3">
+        <h2>Technical <span class="h2note">state of the art and the gap</span></h2>
+        <p>
+          Treat corruption cost as a security parameter and let the market state a
+          bound, the way a bridge states a load limit. For a single sensor it is the
+          physical cost of local interference. For a median of <code>k</code>
+          independent sources it is roughly the cost of corrupting
+          <code>⌈k/2⌉</code> of them, so the bound grows with source diversity in a
+          way that is calculable before launch rather than discovered afterwards.
+        </p>
+        <p>
+          Three gaps. There is no catalogue of corruption cost estimates for the
+          resolution sources in common use, which is tractable and immediately
+          useful to every platform. There is no accepted method for sources that are
+          institutions rather than instruments, where the cost is reputational and
+          legal rather than physical. And the interaction with reflexivity is
+          unexplored: a market large enough to justify corrupting its own resolution
+          source is a market causing its own outcome through a channel that has
+          nothing to do with belief.
+        </p>
+        <p>
+          Rasooly and Rozzi's 817-market Manifold experiment on manipulation
+          persistence is the closest existing empirical work, and it measures whether
+          manipulation sticks rather than what it costs. The cost side is open.
+        </p>
+      </section>
+
+      <section class="block">
+        <h2>Where I would start</h2>
+        <ol class="steps">
+          <li>
+            Catalogue corruption costs for the sources actually in use. Weather
+            stations, official statistics, sports data feeds, on-chain price
+            oracles. Estimate what moving each one would cost.
+          </li>
+          <li>
+            Compare every estimate against the largest open interest that has
+            settled against it. Any market where interest exceeded the cost is a
+            live finding, and there will be some.
+          </li>
+          <li>
+            Work out how the bound grows for a median of <code>k</code> sources,
+            then check whether platforms using multi-source resolution are getting
+            the protection they assume.
+          </li>
+          <li>
+            Spend a weekend on Demski's unsolved entropy market formulation. It is
+            small, self-contained, and genuinely open.
+          </li>
+        </ol>
+      </section>
+
+      <section class="block">
+        <h2>What counts as a result</h2>
+        <p class="result">
+          A published table of resolution sources with corruption cost estimates.
+          Unglamorous, immediately useful, and it would change how markets get
+          sized.
+        </p>
+      </section>
+
+      <section class="block">
+        <h2>Related</h2>
+        <ul class="list">
+          <li>
+            <a class="a" href="/problems/resolution-independence.html">07 The referee holds a position</a>
+            <span class="t">the same bound through social measurement</span>
+          </li>
+          <li>
+            <a class="a" href="/problems/reflexivity.html">03 The price moves the thing it prices</a>
+            <span class="t">causation through the resolution channel</span>
+          </li>
+        </ul>
+      </section>
+
+      <nav class="pnav">
+        <a href="/problems/resolution-independence.html">
+          <span class="dir">Previous</span>07 The referee holds a position
+        </a>
+        <a class="next" href="/problems/decision-selection-bias.html">
+          <span class="dir">Next</span>09 Decision markets answer the wrong question
+        </a>
+      </nav>
+      </main>
+    </div>
+  </body>
+</html>

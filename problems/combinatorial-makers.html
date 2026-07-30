@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nobody can price a joint distribution · Open Problems</title>
+    <meta name="description" content="Science needs probabilities on combinations, not isolated claims. The outcome space explodes and every known market maker either goes bankrupt or becomes intractable." />
+    <link rel="canonical" href="https://adamszymanski.xyz/problems/combinatorial-makers.html" />
+    <meta name="theme-color" content="#050505" />
+    <meta name="color-scheme" content="dark" />
+
+    <link rel="icon" type="image/x-icon" href="/assets/favicon/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png" />
+
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Adam Szymański" />
+    <meta property="og:title" content="Nobody can price a joint distribution" />
+    <meta property="og:description" content="A priced joint distribution over hypotheses would tell researchers which experiment resolves the most uncertainty. Pricing it is #P-hard." />
+    <meta property="og:url" content="https://adamszymanski.xyz/problems/combinatorial-makers.html" />
+    <meta property="og:image" content="https://adamszymanski.xyz/assets/og/og-image.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:creator" content="@a_szymanski_" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,300;1,6..72,400&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <div class="page doc" data-theme="dark">
+      <!-- Settled theme colour; no wash needed, this section is always dark -->
+      <div class="theme-base" aria-hidden="true"></div>
+
+      <!-- Ambient background: same drifting light-pools + grain as the homepage -->
+      <div class="bg" aria-hidden="true">
+        <div class="flare flare-1"></div>
+        <div class="flare flare-2"></div>
+        <div class="grain"></div>
+      </div>
+
+      <!-- Fixed signature, links home -->
+      <a class="sig-link" href="/" aria-label="Adam Szymański — home">
+        <img src="/assets/signature.webp" alt="Adam Szymański" />
+      </a>
+
+      <!-- Desktop rail: site-level, not homepage sections -->
+      <nav class="rail docrail" aria-label="Site">
+        <a href="/"><span class="bar" aria-hidden="true"></span>Index</a>
+        <a href="/problems/" class="active"><span class="bar" aria-hidden="true"></span>Problems</a>
+      </nav>
+
+      <main class="doc-main">
+      <nav class="crumb">
+        <a href="/">Adam Szymański</a><span class="slash">/</span><a href="/problems/">Problems</a><span class="slash">/</span>11
+      </nav>
+
+      <header class="top">
+        <p class="eyebrow">Problem 11 · Combinatorial market makers</p>
+        <h1 class="ptitle">Nobody can price a <em>joint distribution</em>.</h1>
+        <p class="standfirst">
+          Science does not need probabilities on isolated claims. It needs "X works
+          given Y and Z". The outcome space explodes and every known market maker
+          either goes bankrupt or becomes intractable.
+        </p>
+        <div class="tagrow">
+          <span class="tag">Complexity theory</span>
+          <span class="tag">Mechanism design</span>
+          <span class="tag">Biggest unbuilt thing</span>
+        </div>
+      </header>
+
+      <section class="tier tier-1">
+        <h2>Simple <span class="h2note">assumes nothing</span></h2>
+        <p>
+          Prediction markets handle one question at a time. Will this drug pass
+          trials, yes or no.
+        </p>
+        <p>
+          Real questions come in combinations. Does this drug work given the patient
+          has this gene and is already taking that other drug? Now you need prices on
+          every combination of conditions, and the number of combinations doubles with
+          each variable you add. Twenty variables gives you a million outcomes. Fifty
+          gives you more than you could ever store.
+        </p>
+        <p>
+          The machinery that quotes prices cannot keep up. It either takes on
+          unlimited risk or it needs more computation than exists. So these markets do
+          not get built, and the questions that matter most stay unpriced. Hanson ran
+          a working version for science between 2010 and 2015, called SciCast. It shut
+          down. Nobody rebuilt it.
+        </p>
+      </section>
+
+      <section class="tier tier-2">
+        <h2>Moderate <span class="h2note">assumes you know what a market is</span></h2>
+        <p>
+          LMSR prices <code>n</code> outcomes by tracking quantities and evaluating a
+          cost function, with a clean worst-case loss of <code>b·ln(n)</code>. Over a
+          combinatorial space <code>n</code> is exponential in the number of base
+          events, so both the storage and the cost function evaluation blow up
+          together.
+        </p>
+        <p>
+          The known results are discouraging in a specific and useful way. Pricing
+          LMSR over combinatorial spaces is #P-hard in general, the same complexity
+          class as counting satisfying assignments. Approximations exist for
+          restricted structures, for instance when the dependency graph is a tree or
+          has bounded treewidth, and that is exactly where the interesting scientific
+          questions do not live.
+        </p>
+        <p>
+          What makes it worth attacking anyway is the payoff. A priced joint
+          distribution over hypotheses tells a researcher which experiment removes the
+          most uncertainty per dollar. A nervous system for science, and the closest
+          thing that ever existed was shut down a decade ago while DeSci spent its
+          attention elsewhere.
+        </p>
+      </section>
+
+      <section class="tier tier-3">
+        <h2>Technical <span class="h2note">state of the art and the gap</span></h2>
+        <p>
+          The obstruction is that LMSR's cost function
+          <code>C(q) = b·ln Σ exp(q_i/b)</code> requires a sum over an exponential
+          outcome set, and computing it exactly for combinatorial securities is
+          #P-hard. Chen and Pennock mapped the tractable islands, and they are
+          narrow.
+        </p>
+        <p>
+          Four live directions. Approximate pricing with bounded loss, accepting a
+          maker whose worst case exceeds <code>b·ln(n)</code> by a stated factor in
+          exchange for polynomial time. Sampling-based makers using MCMC over the
+          outcome space, which raises the question of whether manipulation through
+          sampling bias is exploitable and nobody has answered it. Restricting to
+          structured spaces and asking the empirical question of whether real
+          scientific hypothesis structures have bounded treewidth, which is checkable
+          and unchecked. And constraint-based pricing, serving only the marginals and
+          conditionals someone actually asks for rather than representing the joint at
+          all, which converts the problem from representation into query answering and
+          may be the practical route.
+        </p>
+        <p>
+          The gap that would move things is an artifact. An implementation that prices
+          a real joint distribution over ten to twenty scientific claims with
+          measurable loss bounds, even a slow one. No such thing exists.
+        </p>
+      </section>
+
+      <section class="block">
+        <h2>Where I would start</h2>
+        <ol class="steps">
+          <li>
+            Read Chen and Pennock on the complexity of LMSR pricing over
+            combinatorial spaces, and find the exact boundary of the tractable
+            cases.
+          </li>
+          <li>
+            Answer the empirical question nobody has. Take one real research area,
+            write down the dependency graph over its live hypotheses, and measure the
+            treewidth. If it is low, a large piece of the problem dissolves.
+          </li>
+          <li>
+            Build the query-based maker that prices only what is asked rather than
+            representing the joint. This is the under-attacked direction and it is
+            engineering rather than theory.
+          </li>
+          <li>
+            Find out what SciCast actually did and why it stopped. It worked. The
+            reasons it ended are worth knowing before rebuilding it.
+          </li>
+        </ol>
+      </section>
+
+      <section class="block">
+        <h2>What counts as a result</h2>
+        <p class="result">
+          A working maker over ten to twenty linked claims with a stated loss bound,
+          however slow. No such artifact exists, so a slow one is the state of the
+          art by default.
+        </p>
+      </section>
+
+      <section class="block">
+        <h2>Related</h2>
+        <ul class="list">
+          <li>
+            <a class="a" href="/problems/who-pays.html">02 Nobody buys the answer</a>
+            <span class="t">researchers as the buyer this would serve</span>
+          </li>
+          <li>
+            <a class="a" href="/problems/subsidies.html">01 Every market is on life support</a>
+            <span class="t">the loss bound is the subsidy</span>
+          </li>
+        </ul>
+      </section>
+
+      <nav class="pnav">
+        <a href="/problems/meta-markets.html">
+          <span class="dir">Previous</span>10 A market on how wrong the market is
+        </a>
+        <a class="next" href="/problems/">
+          <span class="dir">Back to</span>All eleven problems
+        </a>
+      </nav>
+      </main>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Open Problems in Prediction Markets · Adam Szymański</title>
+    <meta name="description" content="Eleven open problems in prediction markets, each explained three ways, with a concrete place to start. None of them are solved. Most can be started on a laptop this week." />
+    <link rel="canonical" href="https://adamszymanski.xyz/problems/" />
+    <meta name="theme-color" content="#050505" />
+    <meta name="color-scheme" content="dark" />
+
+    <link rel="icon" type="image/x-icon" href="/assets/favicon/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png" />
+    <link rel="manifest" href="/assets/favicon/site.webmanifest" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Adam Szymański" />
+    <meta property="og:title" content="Open Problems in Prediction Markets" />
+    <meta property="og:description" content="Eleven open problems in prediction markets, each explained three ways, with a concrete place to start." />
+    <meta property="og:url" content="https://adamszymanski.xyz/problems/" />
+    <meta property="og:image" content="https://adamszymanski.xyz/assets/og/og-image.png" />
+    <meta property="og:locale" content="en_US" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@a_szymanski_" />
+    <meta name="twitter:creator" content="@a_szymanski_" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,300;1,6..72,400&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <div class="page doc" data-theme="dark">
+      <!-- Settled theme colour; no wash needed, this section is always dark -->
+      <div class="theme-base" aria-hidden="true"></div>
+
+      <!-- Ambient background: same drifting light-pools + grain as the homepage -->
+      <div class="bg" aria-hidden="true">
+        <div class="flare flare-1"></div>
+        <div class="flare flare-2"></div>
+        <div class="grain"></div>
+      </div>
+
+      <!-- Fixed signature, links home -->
+      <a class="sig-link" href="/" aria-label="Adam Szymański — home">
+        <img src="/assets/signature.webp" alt="Adam Szymański" />
+      </a>
+
+      <!-- Desktop rail: site-level, not homepage sections -->
+      <nav class="rail docrail" aria-label="Site">
+        <a href="/"><span class="bar" aria-hidden="true"></span>Index</a>
+        <a href="/problems/" class="active"><span class="bar" aria-hidden="true"></span>Problems</a>
+      </nav>
+
+      <main class="doc-main">
+      <nav class="crumb">
+        <a href="/">Adam Szymański</a><span class="slash">/</span>Problems
+      </nav>
+
+      <header class="top">
+        <p class="eyebrow">Open problems</p>
+        <h1 class="ptitle">Eleven things nobody has <em>figured out</em>.</h1>
+        <p class="standfirst">
+          Prediction markets are the first mechanism that pays people for telling
+          the truth about the future. Almost everything load-bearing underneath
+          them is still unsolved.
+        </p>
+      </header>
+
+      <section class="block">
+        <p class="lede">
+          These are the problems I keep running into. None of them are mine. As
+          far as I can find, none of them are solved, and most can be started on
+          a laptop this week with public data.
+        </p>
+        <p>
+          Each problem has three readings. Simple assumes nothing. Moderate
+          assumes you know what a market is. Technical is the state of the art
+          and the specific gap in it. Every page ends with where I would start
+          and what would count as a result, because a problem you cannot begin
+          on is just an interesting fact.
+        </p>
+        <p>
+          The order is roughly dependency. A market has to pay for itself before
+          its price is worth trusting. The price has to be trustworthy before
+          anyone can act on it. Later problems assume the earlier ones went well,
+          which they have not.
+        </p>
+        <p>
+          If you pick one up, tell me. I would rather compare notes than race.
+        </p>
+      </section>
+
+      <section class="block">
+        <h2>Does it pay for itself</h2>
+        <ul class="cards">
+          <li>
+            <a class="card" href="/problems/subsidies.html">
+              <span class="card-num">01</span>
+              <p class="card-title">Every market is on <em>life support</em>.</p>
+              <p class="card-hook">
+                Every prediction market alive today is paid to be alive. Nobody
+                has worked out the cheapest way to keep one breathing, or where
+                the money should go when you only have a little of it.
+              </p>
+              <p class="card-tags">Mechanism design · Runnable on Manifold</p>
+            </a>
+          </li>
+          <li>
+            <a class="card" href="/problems/who-pays.html">
+              <span class="card-num">02</span>
+              <p class="card-title">Nobody buys the <em>answer</em>.</p>
+              <p class="card-hook">
+                These markets produce a probability that beats most experts.
+                There is no customer for it. The fees come from people who want
+                action, so the accuracy is a side effect nobody pays for.
+              </p>
+              <p class="card-tags">Economics · Needs one real buyer</p>
+            </a>
+          </li>
+        </ul>
+      </section>
+
+      <section class="block">
+        <h2>Can you trust the price</h2>
+        <ul class="cards">
+          <li>
+            <a class="card" href="/problems/reflexivity.html">
+              <span class="card-num">03</span>
+              <p class="card-title">The price moves the thing it <em>prices</em>.</p>
+              <p class="card-hook">
+                A market says the bank fails. Depositors see it and withdraw. The
+                bank fails. The forecast was correct and it was also the cause,
+                and calibration cannot tell those apart.
+              </p>
+              <p class="card-tags">Theory · Empirical · Hard identification</p>
+            </a>
+          </li>
+          <li>
+            <a class="card" href="/problems/shadow-coordination.html">
+              <span class="card-num">04</span>
+              <p class="card-title">Thousands of traders, one <em>opinion</em>.</p>
+              <p class="card-hook">
+                Agents are around a third of Polymarket activity and 14 of the
+                top 20 wallets. They are trained on overlapping data, so they
+                never coordinate and they still move as one.
+              </p>
+              <p class="card-tags">Empirical · Public on-chain data</p>
+            </a>
+          </li>
+          <li>
+            <a class="card" href="/problems/wash-trading.html">
+              <span class="card-num">05</span>
+              <p class="card-title">Most of the volume is <em>decoration</em>.</p>
+              <p class="card-hook">
+                Wash trading estimates run from 15% to 95% depending on who is
+                counting. Every volume headline, and every study that uses volume
+                as a control, sits on top of that.
+              </p>
+              <p class="card-tags">Data · Unglamorous · Becomes the reference</p>
+            </a>
+          </li>
+          <li>
+            <a class="card" href="/problems/calibration.html">
+              <span class="card-num">06</span>
+              <p class="card-title">Calibrated on <em>average</em>.</p>
+              <p class="card-hook">
+                The standard defence of these markets is a portfolio statistic
+                being used as though it described each market. Nobody can tell
+                you whether the one in front of you is trustworthy.
+              </p>
+              <p class="card-tags">Empirical · Ships as an API</p>
+            </a>
+          </li>
+        </ul>
+      </section>
+
+      <section class="block">
+        <h2>Can you settle it</h2>
+        <ul class="cards">
+          <li>
+            <a class="card" href="/problems/resolution-independence.html">
+              <span class="card-num">07</span>
+              <p class="card-title">The referee holds a <em>position</em>.</p>
+              <p class="card-hook">
+                Disputes on Polymarket are settled by token vote, and the voters
+                can hold the outcome they are voting on. A $7M and a $237M
+                dispute later, this is still the design.
+              </p>
+              <p class="card-tags">Mechanism design · Auditable today</p>
+            </a>
+          </li>
+          <li>
+            <a class="card" href="/problems/manipulation-ceiling.html">
+              <span class="card-num">08</span>
+              <p class="card-title">The thermometer costs <em>$34,000</em>.</p>
+              <p class="card-hook">
+                Someone warmed a single weather sensor and swung a Polymarket
+                outcome. That figure is a load limit on the market, and no
+                platform publishes theirs.
+              </p>
+              <p class="card-tags">Security · Catalogue project</p>
+            </a>
+          </li>
+        </ul>
+      </section>
+
+      <section class="block">
+        <h2>Can you act on it</h2>
+        <ul class="cards">
+          <li>
+            <a class="card" href="/problems/decision-selection-bias.html">
+              <span class="card-num">09</span>
+              <p class="card-title">Decision markets answer the <em>wrong question</em>.</p>
+              <p class="card-hook">
+                The useful version asks what happens if we do X. What comes back
+                is contaminated by the fact that you chose X, and Hanson, who
+                designed the mechanism, says so himself.
+              </p>
+              <p class="card-tags">Causal inference · Futarchy data now exists</p>
+            </a>
+          </li>
+        </ul>
+      </section>
+
+      <section class="block">
+        <h2>The frontier</h2>
+        <ul class="cards">
+          <li>
+            <a class="card" href="/problems/meta-markets.html">
+              <span class="card-num">10</span>
+              <p class="card-title">A market on how wrong the market <em>is</em>.</p>
+              <p class="card-hook">
+                Layer one prices the event. Layer two prices whether layer one is
+                right. Layer three prices layer two. Converge to truth, oscillate
+                forever, or collapse into noise, and nobody has built one to see.
+              </p>
+              <p class="card-tags">Theory · Simulation · My pick</p>
+            </a>
+          </li>
+          <li>
+            <a class="card" href="/problems/combinatorial-makers.html">
+              <span class="card-num">11</span>
+              <p class="card-title">Nobody can price a <em>joint distribution</em>.</p>
+              <p class="card-hook">
+                Science does not need probabilities on isolated claims. It needs
+                "X works given Y and Z". The outcome space explodes and every
+                known market maker goes bankrupt or intractable.
+              </p>
+              <p class="card-tags">Complexity theory · Biggest unbuilt thing</p>
+            </a>
+          </li>
+        </ul>
+      </section>
+
+      <section class="block">
+        <h2>Working on one</h2>
+        <p>
+          I am reachable on X and Telegram, and I answer. If you get a result,
+          even a negative one, it is worth publishing. Most of these have no
+          public attempt at all, so a failed attempt with a clear writeup moves
+          the field further than another survey.
+        </p>
+        <ul class="list">
+          <li>
+            <a class="a" href="https://x.com/a_szymanski_" target="_blank">X</a>
+            <span class="t">@a_szymanski_</span>
+          </li>
+          <li>
+            <a class="a" href="https://t.me/adamszymanskidev" target="_blank">Telegram</a>
+            <span class="t">@adamszymanskidev</span>
+          </li>
+        </ul>
+      </section>
+      </main>
+    </div>
+  </body>
+</html>
