@@ -30,6 +30,7 @@ Each `.media-beat` is parked by one rule — **before the current beat sits one 
 - **Media**: the plate wipes with an inner `transform: translate3d()` slide, clipped by the plate window's `overflow: hidden`, over `--dur-plate` (1.05s) on `--easing-plate`: past slides out toward the top, future slides in from the bottom. Its dimming is per theme — `--plate-op` (0.30 dark / 0.15 blue / 0.13 light) — because the same alpha reads far heavier on white than on black.
 - **Copy**: `app.js`'s `revealIn`/`revealOut` set each child's `opacity`/`transform`/`clip-path` directly and stagger them 90ms apart on entry (headline first), 40ms apart in reverse on exit — there's no single CSS transition to point to, so the timings live only in `app.js`, not in `style.css`.
 - **The plate's geometry** (`--plate-top/left/w/h` and `--copy-top`) is solved by `app.js`'s `solvePlate()`, not hand-set: it measures the tallest beat's rendered copy, locks the plate to the clips' own 484:280 aspect, and centres it in the band above the footer (sized so the closing beat's footer never overlaps it). It re-solves on resize (debounced) and once the webfont replaces the fallback face, since that changes the copy's own metrics.
+- **On a phone (≤760px) the copy does not sit on the picture.** `solvePhonePlate()` puts the copy under the section list and the plate in a full-bleed band at the clip's own 484:280, anchored to the bottom of the stage above the footer's reserve, undimmed (`.media-plate { opacity: 1 }` in the 760 block). A tall-box plate at that width cropped the clip to a sliver and magnified it. Where the tallest beat's copy and a full band don't both fit (a short phone), the band keeps its size and runs up under the end of the copy, and its top fades into the page by `--plate-fade`, a mask height the solver sets; it is 0, a hard edge, wherever there is no overlap. The stage footer drops its link groups on a phone, since the closing beat already lists them as buttons.
 - The theme comes from `data-theme` on the active `.copy`, applied to `.page`.
 - The footer is absolutely positioned and only fades in on the closing beat (`data-ending`), so the stage stays exactly one viewport tall and nothing ever scrolls.
 
@@ -43,8 +44,7 @@ If you change `--dur-plate`, change `PLATE_MS` in `app.js` to match — it's how
 
 ## The clip slot
 
-`assets/media/beat-{1..6}.mp4` (1560×902; beat 3 1232×712, its source's
-native size), each with a `.webp` poster of its first frame. **Resolution is
+`assets/media/beat-{1..6}.mp4` (1560×902), each with a `.webp` poster of its first frame. **Resolution is
 set by the plate, not the old cut**: the plate reaches 1040 CSS px, 2080
 device px on Retina, and a clip with less real detail than that reads as
 480p however large its frame is — upscaling a small cut does not help. Recut
@@ -57,7 +57,7 @@ are no longer referenced by `index.html`.
 
 These are `<video muted loop playsinline>`, not GIFs. **That is measured, not a
 preference**: the same six clips as GIF ran 4–7 MB *each* at 484×280, because
-real footage has no flat runs for LZW to collapse. The MP4s are 0.9–3.9 MB at 1560×902 and
+real footage has no flat runs for LZW to collapse. The MP4s are 2.2–3.9 MB at 1560×902 and
 run 24 fps instead of 12.
 
 `app.js` plays only the beat on screen and pauses the rest, primes the two

@@ -1164,6 +1164,31 @@ html:not(.js) .experience > .site-footer {
   margin-top: 160px;
 }
 
+/* Attribution for the CC BY clips on the home page, which the home
+   footer links to. Chrome-sized and muted: it is a notice, not copy. */
+.credits {
+  width: 1132.5px;
+  max-width: calc(100% - 80px);
+  margin: 96px 0 0 max(var(--inset), calc(50vw - 565px));
+}
+
+.credits p {
+  max-width: 556px;
+  font-size: 12px;
+  line-height: 1.5;
+  letter-spacing: -0.02em;
+  color: var(--c-grey);
+}
+
+.credits a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.credits + .doc-footer {
+  margin-top: 64px;
+}
+
 /* -------------------------------------------------------------------- *
  * 10. /work/ — intro, hero, project rows
  * -------------------------------------------------------------------- */
@@ -1479,6 +1504,28 @@ html:not(.js) .experience > .site-footer {
     left: 20px;
   }
 
+  /* On a phone the copy stands on the page and the plate is a
+     full-bleed band below it (see app.js's solvePhonePlate), so nothing
+     is set over the picture and it no longer needs dimming. */
+  .media-plate {
+    opacity: 1;
+  }
+
+  /* Where the band has to run up under the copy (a short phone), its top
+     fades into the page; --plate-fade is 0 wherever it does not, which
+     leaves the edge hard. */
+  .media-window {
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 var(--plate-fade, 0px));
+    mask-image: linear-gradient(to bottom, transparent 0, #000 var(--plate-fade, 0px));
+  }
+
+  /* The closing beat already lists X, Signal and Telegram as its own
+     buttons, so on a phone the stage footer drops the repeat and keeps
+     to one short row. */
+  .experience > .site-footer .footer-group {
+    display: none;
+  }
+
   /* Compact the footer to a wrapped row: on a phone the stage has no
      spare height to give it. */
   .site-footer {
@@ -1627,6 +1674,14 @@ html:not(.js) .experience > .site-footer {
 }
 
 /* Short phones: the stage stops being proportional and gets pinned. */
+@media (max-width: 760px) and (max-height: 700px) {
+  :root {
+    --copy-fs: clamp(26px, 7vw, 32px);
+    --sub-fs: 15px;
+    --sub-mt: 16px;
+  }
+}
+
 @media (max-width: 760px) and (max-height: 650px) {
   :root {
     --copy-top: 270px;

@@ -136,6 +136,11 @@
     var tallest = measureCopies();
     solvedFor = tallest;
 
+    if (phone) {
+      solvePhonePlate(tallest);
+      return;
+    }
+
     var insetL = phone ? 20 : mid ? 40 : 56;
     var insetR = phone ? 20 : mid ? 80 : 110;
     var padY = phone ? 42 : mid ? 52 : 64;
@@ -163,6 +168,49 @@
 
     page.style.setProperty("--plate-top", top + "px");
     page.style.setProperty("--plate-left", left + "px");
+    page.style.setProperty("--plate-w", w + "px");
+    page.style.setProperty("--plate-h", h + "px");
+    page.style.setProperty("--copy-top", copyTop + "px");
+  }
+
+  /* A phone is too narrow to set the copy over the picture: the plate
+     there would be a tall box the 484:280 clip is cropped to a sliver
+     of, and magnified in the process. So on a phone the copy stands on
+     the page under the section list, and the plate is a full-bleed band
+     at the clip's own aspect, anchored to the bottom of the stage above
+     the footer's reserve, so the closing beat's footer never covers it
+     and the band sits in the same place on every beat.
+
+     On a short phone the tallest beat's copy and a full band do not both
+     fit. Rather than shrink the picture to a strip, the band keeps its
+     size and runs up under the end of the copy, and its top is faded
+     into the page (--plate-fade, the height of a mask in style.css) far
+     enough past the overlap that the text never stands on the picture at
+     full strength. Only past a limit does the band give up height. */
+  function solvePhonePlate(tallest) {
+    var stage = copiesBox.offsetParent || page;
+    var stageBox = stage.getBoundingClientRect();
+    var stageH = stage.clientHeight || window.innerHeight;
+    var sections = page.querySelector(".sections");
+    var navBottom = sections ? sections.getBoundingClientRect().bottom - stageBox.top : 140;
+
+    var copyTop = Math.round(navBottom + 40);
+    var footerH = footer ? Math.ceil(footer.getBoundingClientRect().height) : 0;
+    var bottom = stageH - footerH - 12;
+    var w = window.innerWidth;
+    var h = Math.round(w * PLATE_ASPECT);
+    var copyEnd = copyTop + tallest + 28;
+    var maxOverlap = Math.round(h * 0.4);
+    var overlap = Math.max(0, copyEnd - (bottom - h));
+    if (overlap > maxOverlap) {
+      h = Math.max(120, h - (overlap - maxOverlap));
+      overlap = Math.max(0, copyEnd - (bottom - h));
+    }
+    var fade = overlap ? Math.min(h, Math.round(overlap * 1.8) + 24) : 0;
+
+    page.style.setProperty("--plate-fade", fade + "px");
+    page.style.setProperty("--plate-top", Math.round(bottom - h) + "px");
+    page.style.setProperty("--plate-left", "0px");
     page.style.setProperty("--plate-w", w + "px");
     page.style.setProperty("--plate-h", h + "px");
     page.style.setProperty("--copy-top", copyTop + "px");
