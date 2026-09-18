@@ -1,38 +1,47 @@
 # Media provenance
 
-Every clip and photograph on this site is public domain or CC0, so nothing here
-needs an attribution line in the page chrome. The record is kept anyway, so a
-future swap knows what it is replacing and where to go back to.
+Every clip and photograph on this site is public domain or CC0, except two
+home page clips under CC BY 4.0 (beats 3 and 4), whose credit is on /work/.
+The record is kept for everything, so a future swap knows what it is
+replacing and where to go back to.
 
 ## Beat loops — `assets/media/`
 
-All six beat loops are cut from five source clips, at **1560×902** — 1.5x the
-plate at its widest (`min(1040px, 62vw)`) — from sources that actually carry
-that much detail. The first cut was 484×280, and a later pass upscaled those
-same small cuts to 1452×840: the frame grew but the detail did not, and on a
-Retina screen the plate read as 480p. Each is a full-height crop of its source
-to the plate's 484:280 aspect, then a crossfade loop (the tail dissolved over
-the head) so the cycle has no seam. Encoded h.264 High, 24 fps, `hqdn3d` for
-sensor grain, `crf 27` (`crf 32` for beat 2, whose particle field is the
-worst case for compression). Beat 3's source is 720p, so it ships at its
-native 1232×712 rather than being upscaled.
+All six beat loops are **1560×902**, 1.5x the plate at its widest
+(`min(1040px, 62vw)`), and cut from sources that actually carry that much
+detail. That second condition is the one that bit twice. The first cut was
+484×280; a later pass upscaled those cuts to 1452×840; a third recut them
+from the original Commons uploads at 1560×902, but several of those "4K"
+uploads are themselves upscales holding about 1000px of real detail, and the
+plate still read as 480p. **Check a source before cutting from it**: scale a
+frame down to a third and back up and compare (ffmpeg `ssim`). A source that
+comes back above about 0.97 does not have the detail, whatever its frame size
+says. Every clip below was checked that way at its crop.
 
-| Beat | Subject | Source (Wikimedia Commons file) | In | Crop | Licence |
+Each is cropped to the plate's 484:280 aspect and given a crossfade loop (the
+tail dissolved over the head) so the cycle has no seam. Encoded h.264 High,
+24 fps, light `hqdn3d` for sensor grain, `crf 27` to `crf 32`.
+
+| Beat | Subject | Source | In | Crop | Licence |
 | --- | --- | --- | --- | --- | --- |
-| 1 | Moonlit cloud over the night side of Earth | `Ocean Moon Glint and City Night Lights in 4K UHD.webm` (NASA JSC, 3840×2160) | 0.25s, 5s | 3734×2160 at x 84 | Public domain |
-| 2 | Ocean surface currents, eastern Pacific | `Perpetual Ocean (EQUIRECTANGULAR) final beauty 16384×8192p30.webm` (NASA SVS 3827) | 60s, 6s | 2340×1352 at 1000,3480 | Public domain |
-| 3 | Standing wave in a rapid, slow motion | `Grand Canyon National Park B-roll Video- River Rapids - Slow Motion (8660897919).webm` (NPS, 1280×720) | 34s, 12s | 1232×712 at x 6 | Public domain |
-| 4 | Lenticular cloud forming over a ridge | `Lenticular cloud over Longs Peak, Colorado (time lapse).ogv` (1920×1080) | 6s, 12s | 1848×1068 at 36,6 | CC0 |
-| 5 | Iceberg wall and brash ice | `GreenlandReel Icebergs 2160APR.webm` (NASA OMG, 3840×2160) | 73s, 11s | 3696×2136 at 144,12 | Public domain |
-| 6 | Dawn limb and city lights from orbit | `Ocean Moon Glint and City Night Lights in 4K UHD.webm` (NASA JSC, 3840×2160) | 11.7s, 3.2s | 3734×2160 at x 90 | Public domain |
+| 1 | Moonlit cloud and city lights, Iberia, from the ISS | *Earth from Space in 4K – Expedition 65 Edition* (NASA JSC, `jsc2022m000172`, images.nasa.gov, 4096×2160 `~orig.mp4`), rotated 180° | segment from 36:55, +18s, 8s | 3734×2160 centred | Public domain |
+| 2 | Ocean surface currents, eastern Pacific | `Perpetual Ocean (EQUIRECTANGULAR) final beauty 16384×8192p30.webm` (Commons; NASA SVS 3827) | 60s, 6s | 2340×1352 at 1000,3480 | Public domain |
+| 3 | Whitewater stream over a mossy bank | `Stream into Lower Dolgoch Falls.webm` (Commons, 3840×2160), saturation 0.72 | 14s, 8s | 1600×926 at 1300,900 | CC BY 4.0, Pierre Marshall |
+| 4 | Lenticular cloud, timelapse | `Time-lapse recording of a lenticular cloud.webm` (Commons, 2880×2160) | 2s, 12s | 2600×1504 at 0,40 | CC BY 4.0, Paethon |
+| 5 | Sunlit iceberg, Disko Bay | `GreenlandReel Icebergs 2160APR.webm` (Commons; NASA OMG) | 114s, 11s | 3734×2160 at 53,0 | Public domain |
+| 6 | Dawn limb over city lights from the ISS | *Earth from Space in 4K – Expedition 65 Edition* (as beat 1), rotated 180° | segment from 32:55, +11s, 8s | 3734×2160 centred | Public domain |
 
-"In" is the source timestamp the loop starts at and the loop's length; the
-crossfade takes one more second (0.8s for beat 6) after it. The in-points and
-crops were recovered by template-matching the original 484×280 cuts against
-each source, so these are the same shots, re-cut at full resolution.
+"In" is where the loop starts and its length; the crossfade takes 1–1.5s
+more after it. Beats 1 and 6 were fetched as 40s segments by seeking into the
+4 GB original over HTTP (`ffmpeg -ss 2215` and `-ss 1975`, `-c copy`), so
+their in-points are relative to those segments.
 
-Beats 1 and 6 are two moments of one continuous orbital pass — the night side
-at the opening, the dawn limb at the close. That bookend is deliberate.
+Beat 5's reel is the softest source left (about 1300px of real detail); its
+sunlit iceberg is the sharpest shot in it. A sharper public-domain iceberg
+would be an upgrade.
+
+**The two CC BY clips need attribution**, which is on /work/ (`#credits`) and
+linked from the home page footer. Keep both if either clip changes.
 
 ## `/work/` stills — `assets/editorial/`
 
@@ -78,9 +87,9 @@ Varp's repo also carries `logo.f76541a9.svg`, which is a *different* mark
 
 - NASA Goddard Scientific Visualization Studio — `svs.gsfc.nasa.gov/3827/`
 - NASA image library — `images-api.nasa.gov`
-- Everything else via Wikimedia Commons, filtered to public domain and CC0.
-  The uploads originate with NASA JSC and Goddard, the National Park Service,
-  the NASA Oceans Melting Greenland campaign, and Unsplash.
+- Everything else via Wikimedia Commons: public domain and CC0, plus the two
+  CC BY clips. The uploads originate with NASA JSC and Goddard, the NASA
+  Oceans Melting Greenland campaign, Unsplash, and the two named authors.
 
 Masters are not kept in the repo; the clips run 12 MB to 450 MB each and the
 photographs 0.7 MB to 21 MB. Re-download from the links above if a recut is
