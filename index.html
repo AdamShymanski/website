@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Adam Szymański</title>
+    <meta name="description" content="Adam Szymański builds pricing models, market-making tools and infrastructure for prediction markets. Blueprints, Touchmarket, and eleven open problems written up." />
+    <link rel="canonical" href="https://adamszymanski.xyz/" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="color-scheme" content="dark light" />
+
+    <link rel="icon" type="image/x-icon" href="/assets/favicon/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png" />
+    <link rel="manifest" href="/assets/favicon/site.webmanifest" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Adam Szymański" />
+    <meta property="og:title" content="Adam Szymański" />
+    <meta property="og:description" content="Adam Szymański builds pricing models, market-making tools and infrastructure for prediction markets. Blueprints, Touchmarket, and eleven open problems written up." />
+    <meta property="og:url" content="https://adamszymanski.xyz/" />
+    <meta property="og:image" content="https://adamszymanski.xyz/assets/og/og-image.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Adam Szymański — prediction markets and market infrastructure" />
+    <meta property="og:image" content="https://adamszymanski.xyz/assets/og/og-square.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="1200" />
+    <meta property="og:image:alt" content="Adam Szymański — prediction markets and market infrastructure" />
+    <meta property="og:locale" content="en_US" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@a_szymanski_" />
+    <meta name="twitter:creator" content="@a_szymanski_" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/style.css" />
+    <link rel="preload" as="image" href="/assets/media/beat-1.webp" />
+  </head>
+  <body>
+    <main class="page" id="page" data-theme="dark">
+      <!-- Ambient backdrop: two soft pools of light over film grain -->
+      <div class="backdrop" aria-hidden="true">
+        <span class="glow glow-a"></span>
+        <span class="glow glow-b"></span>
+        <span class="grain"></span>
+      </div>
+
+      <div class="experience">
+        <header class="site-header">
+          <a class="logo" href="/" aria-label="Adam Szymański — home">
+            <img src="/assets/signature.webp" alt="Adam Szymański" />
+          </a>
+          <nav class="nav" aria-label="Site">
+            <a href="/problems/">Problems</a>
+            <a href="/work/">Work</a>
+            <a href="https://x.com/a_szymanski_" target="_blank" rel="noopener">X ↗</a>
+          </nav>
+        </header>
+
+        <section class="stage">
+          <h1 class="sr-only">
+            Adam Szymański — pricing models, market-making tools and
+            infrastructure for prediction markets
+          </h1>
+
+          <!-- Beat list. Doubles as the progress indicator. -->
+          <nav class="sections" aria-label="Sections">
+            <button type="button" data-beat="0"><span aria-hidden="true">→</span>Who I am</button>
+            <button type="button" data-beat="1"><span aria-hidden="true">→</span>What I build</button>
+            <button type="button" data-beat="2"><span aria-hidden="true">→</span>Why it matters</button>
+            <button type="button" data-beat="3"><span aria-hidden="true">→</span>Where it goes</button>
+            <button type="button" data-beat="4"><span aria-hidden="true">→</span>The work</button>
+            <button type="button" data-beat="5"><span aria-hidden="true">→</span>Compare notes</button>
+          </nav>
+
+          <!-- Copy stack. Every beat sits at the same origin, over the
+               media plate; app.js reveals the current one's children with
+               a staggered rise instead of sliding the block. -->
+          <div class="copies">
+            <article class="copy" id="who-i-am" data-beat="0" data-theme="dark">
+              <p>
+                I am Adam, twenty-one, in Poland. I build the parts of prediction
+                markets that <span class="mark">nobody has built yet.</span>
+              </p>
+              <p class="sub">
+                I started because the things I wanted to use did not exist. That
+                has not changed.
+              </p>
+            </article>
+
+            <article class="copy" id="what-i-build" data-beat="1" data-theme="blue">
+              <p>
+                Pricing models. Market-making tools.
+                <span class="mark">The architecture those markets run on.</span>
+              </p>
+            </article>
+
+            <article class="copy" id="why-it-matters" data-beat="2" data-theme="light">
+              <p>
+                Prediction markets are the first mechanism that
+                <span class="mark">pays people for telling the truth about the future.</span>
+                Today that mostly means elections and sports.
+              </p>
+            </article>
+
+            <article class="copy" id="where-it-goes" data-beat="3" data-theme="blue">
+              <p>
+                Tomorrow it prices drug trial outcomes, startup survival, climate
+                targets, economies' performance, and
+                <span class="mark">the cost of a FLOP in 2028.</span>
+              </p>
+              <p class="sub">
+                Almost everything load-bearing underneath that is still unsolved.
+                <a href="/problems/">Eleven of those problems are written up here.</a>
+                I am working on the infrastructure for the rest.
+              </p>
+            </article>
+
+            <article class="copy" id="work" data-beat="4" data-theme="light">
+              <p>
+                What exists already:
+                <span class="mark">Blueprints and Touchmarket.</span>
+              </p>
+              <p class="sub">
+                One is DeFi infrastructure, the other is prediction markets.
+                Before them, a markets tool and a machine-learning project.
+                <a href="/work/">The whole list is here.</a>
+              </p>
+              <div class="work-marks">
+                <a href="https://blueprints.finance/" target="_blank" rel="noopener">
+                  <img class="mark-blueprints" src="/assets/logos/blueprints.svg" alt="Blueprints" />
+                </a>
+                <a href="https://touch.market/" target="_blank" rel="noopener">
+                  <img class="mark-touchmarket" src="/assets/logos/touchmarket.svg" alt="Touchmarket" />
+                </a>
+              </div>
+            </article>
+
+            <article class="copy" id="contact" data-beat="5" data-theme="dark" data-ending>
+              <p>Compare notes.</p>
+              <p class="sub">
+                If you are working on any of this, or think one of the eleven is
+                wrong, I want to hear it.
+              </p>
+              <div class="actions">
+                <a href="mailto:hi@adamszymanski.xyz">Email · hi@adamszymanski.xyz</a>
+                <a class="ghost" href="https://x.com/a_szymanski_" target="_blank" rel="noopener">X · @a_szymanski_</a>
+                <a class="ghost" href="https://signal.me/#eu/mgJfrey3UFX1N4fbjxit7_9RnvSt694FhBDMovSDUOrnuH4lN5RARqm74mZkVQze" target="_blank" rel="noopener">Signal · szymanski.96</a>
+                <a class="ghost" href="https://t.me/adamszymanskidev" target="_blank" rel="noopener">Telegram · @adamszymanskidev</a>
+              </div>
+            </article>
+          </div>
+
+          <!-- Media plate. One fixed window, behind the copy, sized by
+               app.js to enclose the tallest beat's copy and centred in the
+               viewport — its geometry never changes once solved. Only the
+               clip inside slides vertically between beats; the small frame
+               is gone, since this layout carries one picture, not two.
+               Looping, muted, silent clips — app.js plays the beat on
+               screen and leaves the rest paused. Swap the files in
+               assets/media/ to change it. -->
+          <div class="media" aria-hidden="true">
+            <div class="media-window">
+              <div class="media-beat" data-beat="0">
+                <video class="media-plate" src="/assets/media/beat-1.mp4" poster="/assets/media/beat-1.webp"
+                       width="484" height="280" muted loop playsinline preload="auto"></video>
+              </div>
+              <div class="media-beat" data-beat="1">
+                <video class="media-plate" src="/assets/media/beat-2.mp4" poster="/assets/media/beat-2.webp"
+                       width="484" height="280" muted loop playsinline preload="none"></video>
+              </div>
+              <div class="media-beat" data-beat="2">
+                <video class="media-plate" src="/assets/media/beat-3.mp4" poster="/assets/media/beat-3.webp"
+                       width="484" height="280" muted loop playsinline preload="none"></video>
+              </div>
+              <div class="media-beat" data-beat="3">
+                <video class="media-plate" src="/assets/media/beat-4.mp4" poster="/assets/media/beat-4.webp"
+                       width="484" height="280" muted loop playsinline preload="none"></video>
+              </div>
+              <div class="media-beat" data-beat="4">
+                <video class="media-plate" src="/assets/media/beat-5.mp4" poster="/assets/media/beat-5.webp"
+                       width="484" height="280" muted loop playsinline preload="none"></video>
+              </div>
+              <div class="media-beat" data-beat="5">
+                <video class="media-plate" src="/assets/media/beat-6.mp4" poster="/assets/media/beat-6.webp"
+                       width="484" height="280" muted loop playsinline preload="none"></video>
+              </div>
+            </div>
+          </div>
+
+          <!-- Visible only on keyboard focus; the beats are also reachable
+               from the section list and the arrow keys. -->
+          <div class="step-controls">
+            <button type="button" data-step="-1">Previous</button>
+            <button type="button" data-step="1">Next</button>
+          </div>
+        </section>
+
+        <footer class="site-footer">
+          <p class="copyright">Adam Szymański<br />© 2026</p>
+          <div class="footer-group">
+            <span>Elsewhere</span>
+            <a href="https://x.com/a_szymanski_" target="_blank" rel="noopener">X</a>
+            <a href="https://signal.me/#eu/mgJfrey3UFX1N4fbjxit7_9RnvSt694FhBDMovSDUOrnuH4lN5RARqm74mZkVQze" target="_blank" rel="noopener">Signal</a>
+            <a href="https://t.me/adamszymanskidev" target="_blank" rel="noopener">Telegram</a>
+          </div>
+          <div class="footer-group">
+            <span>Work</span>
+            <a href="/work/">All</a>
+            <a href="https://blueprints.finance/" target="_blank" rel="noopener">Blueprints</a>
+            <a href="https://touch.market/" target="_blank" rel="noopener">Touchmarket</a>
+          </div>
+          <a class="footer-end" href="/problems/">Problems</a>
+        </footer>
+      </div>
+    </main>
+
+    <script src="/app.js"></script>
+  </body>
+</html>
