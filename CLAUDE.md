@@ -43,8 +43,13 @@ If you change `--dur-plate`, change `PLATE_MS` in `app.js` to match — it's how
 
 ## The clip slot
 
-`assets/media/beat-{1..6}.mp4` (484×280), each with a `.webp` poster of its
-first frame. The plate always plays the clip at its native 484:280 aspect —
+`assets/media/beat-{1..6}.mp4` (1560×902; beat 3 1232×712, its source's
+native size), each with a `.webp` poster of its first frame. **Resolution is
+set by the plate, not the old cut**: the plate reaches 1040 CSS px, 2080
+device px on Retina, and a clip with less real detail than that reads as
+480p however large its frame is — upscaling a small cut does not help. Recut
+from the sources in `assets/SOURCES.md`, never from the files here. The plate
+always plays the clip at its 484:280 aspect —
 `solvePlate()` (see "The beat experience" above) locks the plate to that ratio
 so nothing is ever cropped, whatever size it solves to. `beat-{1..6}-small.mp4`
 and their posters are still in the repo from an earlier two-frame layout but
@@ -52,14 +57,14 @@ are no longer referenced by `index.html`.
 
 These are `<video muted loop playsinline>`, not GIFs. **That is measured, not a
 preference**: the same six clips as GIF ran 4–7 MB *each* at 484×280, because
-real footage has no flat runs for LZW to collapse. The MP4s are 28–592 KB and
+real footage has no flat runs for LZW to collapse. The MP4s are 0.9–3.9 MB at 1560×902 and
 run 24 fps instead of 12.
 
 `app.js` plays only the beat on screen and pauses the rest, primes the two
 neighbours' `preload`, and plays nothing at all under `prefers-reduced-motion`
 — the poster stands in. Everything past the neighbours stays at `preload="none"`.
 
-To recut a beat: crop to 484:280, scale to 484×280, and give it a crossfade
+To recut a beat: crop to 484:280, scale to 1560×902, and give it a crossfade
 loop so the cycle has no seam — the tail is dissolved over the head, which for
 water, cloud and drifting ice is invisible. `assets/SOURCES.md` records what
 each clip is, where it came from and its licence. The masters are not in the
