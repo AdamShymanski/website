@@ -480,9 +480,11 @@ ol {
 
 /* The copy sits on the plate rather than beside it, so a full-screen
    slide would fight the picture it is standing on. Instead the block
-   holds its position and its own children rise into place — see
-   app.js's revealIn/revealOut, which drive each child's opacity,
-   transform and clip-path directly so they can stagger. The article
+   holds its position and its own parts travel — the headline one
+   rendered line at a time out of its own mask, the rest as whole
+   blocks. See app.js's revealIn/revealOut, which drive each unit's
+   transform, opacity and clip-path directly so they can stagger, and
+   which flip the direction of travel to follow the gesture. The article
    itself only ever toggles visibility. */
 .copy {
   position: absolute;
@@ -508,6 +510,36 @@ ol {
   letter-spacing: var(--copy-ls);
   font-feature-settings: "liga" 0;
   text-wrap: pretty;
+}
+
+/* Line masks for the headline. app.js cuts the paragraph into one .line
+   per rendered line box once the text has been laid out, so each line can
+   rise out of a window of its own instead of the whole block moving as
+   one; `.is-split` is set on the same pass and is the only thing that
+   turns this geometry on, so an unsplit paragraph (no JS, or before the
+   cut) is untouched.
+
+   The mask has to be a little taller than the line box or it would shave
+   the glyphs, whose content area is 1.271em against a 1.08em line — hence
+   the padding. The matching negative margin takes the height back, so a
+   split paragraph measures exactly as tall as it did unsplit and the
+   plate solved from it does not move. The margins must not collapse into
+   each other for that to hold, which is the whole reason the paragraph
+   becomes a flex column. */
+.copy p.is-split {
+  display: flex;
+  flex-direction: column;
+}
+
+.copy .line {
+  display: block;
+  overflow: hidden;
+  padding: 0.14em 0;
+  margin: -0.14em 0;
+}
+
+.copy .line-in {
+  display: block;
 }
 
 .copy .sub {
