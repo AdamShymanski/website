@@ -5,9 +5,12 @@
  * do the same thing: move to a beat. The media plate is one fixed
  * window behind the copy, sized to enclose the tallest beat and never
  * moved once solved — only the clip inside it slides. The copy holds
- * its own position too; instead of sliding a full screen height, each
- * beat's children rise into place with a staggered clip reveal, since a
- * full-screen slide would fight the picture it is standing on.
+ * its own position too; instead of sliding a full screen height, the
+ * headline travels one rendered line at a time out of a mask of its own
+ * and the rest of the beat follows as whole blocks, since a full-screen
+ * slide would fight the picture it is standing on. Everything travels
+ * the way the gesture went: forward, the copy leaves upward and the next
+ * beat comes up from below; backward, both reverse.
  * ==================================================================== */
 (function () {
   "use strict";
@@ -38,9 +41,23 @@
   var EXIT_EASE = "cubic-bezier(0.4, 0, 0.9, 0.4)";
   var ENTER_STAGGER_MS = 90;
   var EXIT_STAGGER_MS = 40;
+  /* A masked line carries its own edge, so it can run tighter and closer
+     behind the line above it than a whole block can. */
+  var LINE_ENTER_MS = 780;
+  var LINE_EXIT_MS = 400;
+  var LINE_ENTER_STAGGER_MS = 62;
+  var LINE_EXIT_STAGGER_MS = 34;
+  /* How far a line travels, as a share of its own height. A line does not
+     clear its mask at 100%: the mask is taller than the line box by the
+     padding it carries for the glyphs, and a .mark band hangs 0.1255em
+     below the line box on top of that (see .line and --mark-band-y in
+     style.css). 130% clears both edges with room to spare; on an
+     expo-out curve the extra distance is spent in the first few frames
+     and reads as one line-height of movement either way. */
+  var LINE_TRAVEL = 130;
   /* The outgoing block has to clear the plate before the incoming one
      rises, or the two overlap on the same picture. */
-  var ENTER_DELAY_MS = 260;
+  var ENTER_DELAY_MS = 230;
   /* How long a departing beat stays painted before it is hidden. */
   var EXIT_LOCK_MS = 500;
   /* One wheel/key/swipe gesture's cooldown, tuned to the reveal's own
@@ -71,6 +88,10 @@
   var maxCopyH = 0;
   var solvedFor = 0;
   var resizeTimer = null;
+  /* Which way the last move went: 1 forward (down the list), -1 back.
+     The reveal reads it, so a swipe up and a swipe down do not play the
+     same animation. */
+  var travel = 1;
 
   function toArray(list) {
     return Array.prototype.slice.call(list);
@@ -148,61 +169,258 @@
   }
 
   /* ------------------------------------------------------------------ *
-   * Copy — staggered rise-and-clip reveal
+   * Copy — cutting the headline into lines
    * ------------------------------------------------------------------ */
-  /* Snaps a beat's children to the hidden, pre-reveal state with no
-     transition. Used on every beat but the first at boot, so the first
-     time each one is actually entered it rises from nothing instead of
-     flashing its settled content for the length of ENTER_DELAY_MS. */
-  function primeHidden(article) {
-    toArray(article.children).forEach(function (child) {
-      child.style.transition = "none";
-      child.style.opacity = "0";
-      child.style.transform = "translate3d(0, 26px, 0)";
-      child.style.clipPath = "inset(-0.14em 0 100% 0)";
+  /* The headline reads far better if each rendered line rises out of a
+     window of its own than if the whole paragraph moves as one, so the
+     paragraph is cut into one `.line` per line box once it has been laid
+     out. The cut is made at the breaks the browser itself chose, which is
+     what keeps `.mark` intact: a mark running over two lines becomes one
+     span per line, which is exactly the fragment box-decoration-break:
+     clone was already painting.
+
+     Because the cut depends on where the text wraps, it has to be redone
+     whenever the wrap can change — a resize, or the webfont replacing the
+     fallback face — so the paragraph's original markup is parked on the
+     element and every pass starts from that rather than from the last
+     pass's output. */
+  function headlines(article) {
+    return toArray(article.children).filter(function (child) {
+      return child.tagName === "P" && !child.classList.contains("sub");
     });
   }
 
-  function revealIn(article) {
-    var children = toArray(article.children);
+  /* Every text node under the paragraph, each tagged with the element it
+     sits in (a `.mark`, or nothing), so a fragment of it can be given the
+     same element back when the lines are rebuilt. */
+  function collectText(node, owner, out) {
+    toArray(node.childNodes).forEach(function (child) {
+      if (child.nodeType === 3) {
+        out.push({ node: child, owner: owner });
+      } else if (child.nodeType === 1) {
+        collectText(child, child, out);
+      }
+    });
+    return out;
+  }
+
+  function splitLines(p) {
+    if (p.getAttribute("data-copy-src") === null) {
+      p.setAttribute("data-copy-src", p.innerHTML);
+    } else {
+      p.classList.remove("is-split");
+      p.innerHTML = p.getAttribute("data-copy-src");
+    }
+    /* An unsplit paragraph is a reveal unit in its own right and may be
+       carrying that reveal's inline styles. The nodes below replace it,
+       so those have to go or they would hide the lines. splitAll parks
+       every beat again straight after, so clearing them is safe even if
+       the cut below bails out. */
+    p.style.transition = "";
+    p.style.opacity = "";
+    p.style.transform = "";
+    p.style.clipPath = "";
+
+    var texts = collectText(p, null, []);
+    if (!texts.length) return;
+
+    /* One rect per character is more work than one per word, but a word
+       can itself be broken across lines and this cannot miss that. The
+       copy is a couple of hundred characters and nothing is written back
+       until the measuring is done, so it costs one layout. */
+    var range = document.createRange();
+    var pieces = [];
+
+    texts.forEach(function (entry) {
+      var value = entry.node.nodeValue;
+      var start = 0;
+      var top = null;
+      for (var i = 0; i < value.length; i++) {
+        range.setStart(entry.node, i);
+        range.setEnd(entry.node, i + 1);
+        var rect = range.getClientRects()[0];
+        /* The space a line broke at has no box of its own. */
+        if (!rect) continue;
+        var y = Math.round(rect.top);
+        if (top === null) {
+          top = y;
+        } else if (Math.abs(y - top) > 1) {
+          pieces.push({ owner: entry.owner, text: value.slice(start, i), top: top });
+          start = i;
+          top = y;
+        }
+      }
+      pieces.push({ owner: entry.owner, text: value.slice(start), top: top });
+    });
+
+    var lines = [];
+    var lineTop = null;
+    pieces.forEach(function (piece) {
+      if (!piece.text) return;
+      /* Whitespace that never got a box belongs to the line it followed. */
+      if (piece.top === null) {
+        if (lines.length) lines[lines.length - 1].push(piece);
+        return;
+      }
+      if (lineTop === null || Math.abs(piece.top - lineTop) > 1) {
+        lines.push([]);
+        lineTop = piece.top;
+      }
+      lines[lines.length - 1].push(piece);
+    });
+    if (!lines.length) return;
+
+    p.textContent = "";
+    lines.forEach(function (parts) {
+      var line = document.createElement("span");
+      var inner = document.createElement("span");
+      line.className = "line";
+      inner.className = "line-in";
+      parts.forEach(function (piece, i) {
+        var text = piece.text;
+        /* The space the line broke at would otherwise sit at the head or
+           the tail of a line that is now a block of its own. */
+        if (i === 0) text = text.replace(/^\s+/, "");
+        if (i === parts.length - 1) text = text.replace(/\s+$/, "");
+        if (!text) return;
+        if (piece.owner) {
+          var clone = piece.owner.cloneNode(false);
+          clone.appendChild(document.createTextNode(text));
+          inner.appendChild(clone);
+        } else {
+          inner.appendChild(document.createTextNode(text));
+        }
+      });
+      if (!inner.childNodes.length) return;
+      line.appendChild(inner);
+      p.appendChild(line);
+    });
+    p.classList.add("is-split");
+  }
+
+  /* Re-cuts every beat and puts each one back where it was: the beat on
+     screen settled, the rest parked hidden — the cut throws away the very
+     nodes the reveal wrote its inline styles on. */
+  function splitAll() {
+    copies.forEach(function (article) {
+      headlines(article).forEach(splitLines);
+    });
+    copies.forEach(function (article, i) {
+      if (i === index) settle(article);
+      else primeHidden(article);
+    });
+  }
+
+  /* ------------------------------------------------------------------ *
+   * Copy — staggered, direction-aware reveal
+   * ------------------------------------------------------------------ */
+  /* One unit of the reveal: a masked line of the headline, or a whole
+     block (the sub-line, the action row, the wordmarks). A line travels
+     inside its own window and needs no fade to hide its edges; a block
+     has no window, so it fades and rises instead. */
+  function unitsOf(article) {
+    var units = [];
+    toArray(article.children).forEach(function (child) {
+      var lines = child.classList.contains("is-split")
+        ? toArray(child.querySelectorAll(".line-in"))
+        : [];
+      if (lines.length) {
+        lines.forEach(function (line) {
+          units.push({ el: line, line: true });
+        });
+      } else {
+        units.push({ el: child, line: false });
+      }
+    });
+    return units;
+  }
+
+  /* `from` is the side the unit waits on: 1 below the copy, -1 above it. */
+  function park(unit, from) {
+    var style = unit.el.style;
+    style.transition = "none";
+    if (unit.line) {
+      style.transform = "translate3d(0, " + from * LINE_TRAVEL + "%, 0)";
+    } else {
+      style.opacity = "0";
+      style.transform = "translate3d(0, " + from * 26 + "px, 0)";
+      style.clipPath =
+        from > 0 ? "inset(-0.14em 0 100% 0)" : "inset(100% 0 -0.22em 0)";
+    }
+  }
+
+  function land(unit) {
+    var style = unit.el.style;
+    style.transform = "translate3d(0, 0, 0)";
+    if (!unit.line) {
+      style.opacity = "1";
+      style.clipPath = "inset(-0.14em 0 -0.22em 0)";
+    }
+  }
+
+  /* Snaps a beat to the hidden, pre-reveal state with no transition. Used
+     on every beat but the first at boot, so the first time each one is
+     actually entered it rises from nothing instead of flashing its
+     settled content for the length of ENTER_DELAY_MS. */
+  function primeHidden(article) {
+    unitsOf(article).forEach(function (unit) {
+      park(unit, travel);
+    });
+  }
+
+  function settle(article) {
+    unitsOf(article).forEach(function (unit) {
+      unit.el.style.transition = "none";
+      land(unit);
+    });
+  }
+
+  function revealIn(article, direction) {
     var instant = reduced();
-    children.forEach(function (child, i) {
-      child.style.transition = "none";
-      child.style.opacity = "0";
-      child.style.transform = "translate3d(0, 26px, 0)";
-      child.style.clipPath = "inset(-0.14em 0 100% 0)";
-      /* Forces the hidden state above to paint before the transition
+    var delay = 0;
+    unitsOf(article).forEach(function (unit) {
+      park(unit, direction);
+      /* Forces the parked state above to paint before the transition
          below is turned back on, or the browser coalesces both and the
          reveal never plays. */
-      void child.offsetHeight;
+      void unit.el.offsetHeight;
       if (!instant) {
-        var delay = i * ENTER_STAGGER_MS;
-        child.style.transition =
-          "transform 0.86s " + ENTER_EASE + " " + delay + "ms, " +
-          "opacity 0.62s " + ENTER_EASE + " " + delay + "ms, " +
-          "clip-path 0.86s " + ENTER_EASE + " " + delay + "ms";
+        unit.el.style.transition = unit.line
+          ? "transform " + LINE_ENTER_MS + "ms " + ENTER_EASE + " " + delay + "ms"
+          : "transform 0.86s " + ENTER_EASE + " " + delay + "ms, " +
+            "opacity 0.62s " + ENTER_EASE + " " + delay + "ms, " +
+            "clip-path 0.86s " + ENTER_EASE + " " + delay + "ms";
+        delay += unit.line ? LINE_ENTER_STAGGER_MS : ENTER_STAGGER_MS;
       }
-      child.style.opacity = "1";
-      child.style.transform = "translate3d(0, 0, 0)";
-      child.style.clipPath = "inset(-0.14em 0 -0.22em 0)";
+      land(unit);
     });
   }
 
-  function revealOut(article) {
-    var children = toArray(article.children);
+  function revealOut(article, direction) {
     var instant = reduced();
-    children.forEach(function (child, i) {
-      if (!instant) {
-        var delay = (children.length - 1 - i) * EXIT_STAGGER_MS;
-        child.style.transition =
-          "transform 0.42s " + EXIT_EASE + " " + delay + "ms, " +
-          "opacity 0.34s " + EXIT_EASE + " " + delay + "ms";
-      } else {
-        child.style.transition = "none";
-      }
-      child.style.opacity = "0";
-      child.style.transform = "translate3d(0, -14px, 0)";
-    });
+    var delay = 0;
+    /* A beat leaves from the bottom up, so the line the eye finished on
+       is the first one gone. */
+    unitsOf(article)
+      .reverse()
+      .forEach(function (unit) {
+        var style = unit.el.style;
+        if (!instant) {
+          style.transition = unit.line
+            ? "transform " + LINE_EXIT_MS + "ms " + EXIT_EASE + " " + delay + "ms"
+            : "transform 0.42s " + EXIT_EASE + " " + delay + "ms, " +
+              "opacity 0.34s " + EXIT_EASE + " " + delay + "ms";
+          delay += unit.line ? LINE_EXIT_STAGGER_MS : EXIT_STAGGER_MS;
+        } else {
+          style.transition = "none";
+        }
+        if (unit.line) {
+          style.transform = "translate3d(0, " + -direction * LINE_TRAVEL + "%, 0)";
+        } else {
+          style.opacity = "0";
+          style.transform = "translate3d(0, " + -direction * 14 + "px, 0)";
+        }
+      });
   }
 
   /* ------------------------------------------------------------------ *
@@ -260,10 +478,15 @@
 
     var opts = options || {};
     var previous = index;
+    /* Everything the copy does from here reads this: the beat leaves the
+       way the gesture was going and the next one arrives from the side
+       the gesture came from. */
+    travel = previous < 0 || next > previous ? 1 : -1;
+    var direction = travel;
     index = next;
 
     if (previous >= 0) {
-      revealOut(copies[previous]);
+      revealOut(copies[previous], direction);
     }
 
     copies.forEach(function (el, i) {
@@ -280,7 +503,7 @@
     var entering = copies[index];
     window.setTimeout(
       function () {
-        if (copies[index] === entering) revealIn(entering);
+        if (copies[index] === entering) revealIn(entering, direction);
       },
       previous >= 0 && !reduced() ? ENTER_DELAY_MS : 0
     );
@@ -486,26 +709,33 @@
     return 0;
   }
 
-  /* The plate is solved from rendered copy and viewport size, so it has
-     to be re-solved whenever either changes: on resize (debounced — the
-     solve is cheap, but there is no reason to run it on every intermediate
-     frame of a drag-resize), and once the webfont has replaced the
-     fallback face, since that changes the copy's own metrics. */
+  /* The headline's line cut and the plate are both read off rendered
+     copy and viewport size, so both have to be redone whenever either
+     changes: on resize (debounced — neither is expensive, but there is no
+     reason to run them on every intermediate frame of a drag-resize), and
+     once the webfont has replaced the fallback face, since that changes
+     where the copy wraps and how tall it is. The cut comes first; the
+     plate is solved from what it leaves behind. */
+  function relayout() {
+    splitAll();
+    solvePlate();
+  }
+
   window.addEventListener("resize", function () {
     window.clearTimeout(resizeTimer);
-    resizeTimer = window.setTimeout(solvePlate, 100);
+    resizeTimer = window.setTimeout(relayout, 100);
   });
 
   if (document.fonts && document.fonts.ready) {
-    document.fonts.ready.then(solvePlate);
+    document.fonts.ready.then(relayout);
   }
 
   /* ------------------------------------------------------------------ *
    * Start
    * ------------------------------------------------------------------ */
-  copies.forEach(function (el) {
-    primeHidden(el);
-  });
+  /* index is still -1 here, so this cuts every headline into lines and
+     parks all six beats hidden — no beat is on screen yet to settle. */
+  splitAll();
   mediaBeats.forEach(function (el, i) {
     parkMedia(el, i, 0);
   });
