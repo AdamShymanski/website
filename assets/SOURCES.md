@@ -31,6 +31,13 @@ tail dissolved over the head) so the cycle has no seam. Encoded h.264 High,
 | 5 | Sunlit iceberg, Disko Bay | `GreenlandReel Icebergs 2160APR.webm` (Commons; NASA OMG) | 114s, 11s | 3734×2160 at 53,0 | Public domain |
 | 6 | Dawn limb over city lights from the ISS | *Earth from Space in 4K – Expedition 65 Edition* (as beat 1), rotated 180° | segment from 32:55, +11s, 8s | 3734×2160 centred | Public domain |
 
+The table is keyed by **file**, and the home page now has seven beats to six
+files: the problems beat (index 4) points at `beat-2`, the ocean currents. It
+sits three beats after the one that shows that clip first, which is far enough
+apart that it does not read as a repeat, and being the same `src` it is served
+from cache rather than downloaded twice. If a seventh cut is made, it goes
+there.
+
 "In" is where the loop starts and its length; the crossfade takes 1–1.5s
 more after it. Beats 1 and 6 were fetched as 40s segments by seeking into the
 4 GB original over HTTP (`ffmpeg -ss 2215` and `-ss 1975`, `-c copy`), so

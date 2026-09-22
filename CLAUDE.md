@@ -15,9 +15,9 @@ Two things worth knowing about the design intent:
 
 ## Pages
 
-- `index.html` — the **beat experience**. The page does not scroll. Six beats (`.copy[data-beat]`) are stacked at one origin over a single fixed media plate, and each beat's copy rises into place with a staggered reveal rather than sliding; a section list on the left doubles as the progress indicator; the theme recolours per beat. The beats are who I am · what I build · why it matters · where it goes · **the work** · compare notes; the work beat carries the two company wordmarks and is the entry point to `/work/`.
+- `index.html` — the **beat experience**. The page does not scroll. Seven beats (`.copy[data-beat]`) are stacked at one origin over a single fixed media plate, and each beat's copy rises into place with a staggered reveal rather than sliding; a section list on the left doubles as the progress indicator; the theme recolours per beat. The beats are who I am · what I build · why it matters · where it goes · **the problems** · **the work** · compare notes; the problems beat is the entry point to `/problems/`, and the work beat carries the two company wordmarks and is the entry point to `/work/`. Nothing in `app.js` or `style.css` counts the beats — the controller derives everything from the DOM — so a beat is added or removed by adding or removing one entry in each of the three stacks (section list, `.copies`, `.media`), in the same order.
 - `work/index.html` — projects, laid out on a `/work` grid: a 325px label column, a 248px gutter, a 556px measure. Intro, full-bleed hero, then one `.project-row` per project.
-- `problems/index.html` + eleven `problems/*.html` — the open-problems index and detail pages. Long-form documents on the same grid: `h2` in the label column, prose in the measure column.
+- `problems/index.html` + ten `problems/*.html` — the open-problems index and detail pages. Long-form documents on the same grid: `h2` in the label column, prose in the measure column.
 - `style.css` — the whole design system, in numbered sections (tokens, reset, themes, backdrop, chrome, stage, media, no-JS, documents, work, responsive).
 - `app.js` — the beat controller, only used by `index.html`.
 
@@ -44,7 +44,7 @@ If you change `--dur-plate`, change `PLATE_MS` in `app.js` to match — it's how
 
 ## The clip slot
 
-`assets/media/beat-{1..6}.mp4` (1560×902), each with a `.webp` poster of its first frame. **Resolution is
+`assets/media/beat-{1..6}.mp4` (1560×902), each with a `.webp` poster of its first frame. **Seven beats, six files**: the problems beat replays `beat-2` (ocean currents), three beats away from the one that shows it first, so nothing repeats next to itself; because it is the same `src`, the second plate costs no extra download. A seventh cut would replace it. **Resolution is
 set by the plate, not the old cut**: the plate reaches 1040 CSS px, 2080
 device px on Retina, and a clip with less real detail than that reads as
 480p however large its frame is — upscaling a small cut does not help. Recut

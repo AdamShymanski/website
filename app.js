@@ -117,7 +117,7 @@
   }
 
   /* The plate has to enclose the widest measure and the tallest of the
-     six beats with even insets, while keeping the clips' own aspect
+     beats with even insets, while keeping the clips' own aspect
      ratio so nothing inside it is cropped — so it is solved from both,
      not guessed. Width comes from the copy's own width; height from
      whichever of the copy's height or the aspect-locked width demands
