@@ -1216,6 +1216,12 @@ html:not(.js) .experience > .site-footer {
   letter-spacing: -0.01em;
 }
 
+.introduction p a {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 1px;
+}
+
 .hero {
   position: relative;
   aspect-ratio: 1360 / 448;
