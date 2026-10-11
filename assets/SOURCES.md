@@ -68,13 +68,20 @@ one set.
 | `touchmarket.webp` | 1112×594 | Aerial surf, Vazon Bay | `Surfing in Vazon Bay` (Unsplash, CC0) | 4096×2160 |
 | `tcm.webp` | 1112×594 | Europe's city lights and the limb, from the ISS | `ISS-65 Europe, city lights from space` (NASA) | 5568×3712 |
 | `varp.webp` | 1112×594 | Iceberg under a starlit twilight | `Iceberg in North Star Bay, Greenland` | 3747×3178 |
+| `10bips.webp` | 1112×594 | The 10bips mark on its paper, `#f4f1ea` | drawn for this site from the brand spec, not a photograph | 1112×594 |
 
-All public domain except Vazon Bay, which is CC0.
+All public domain except Vazon Bay, which is CC0, and `10bips.webp`, which is
+Adam's own mark. It is a stand-in: the row should get a photograph like the
+others. Candidates looked at, all NASA: *Earth at Twilight* from the ISS
+(`ISS002-E-7377`, 3060×2092), the edge of iceberg A-68A from Operation
+IceBridge (John Sonntag, 4753×3169), and the vortex street behind Alejandro
+Selkirk Island from Landsat 7.
 
 ## Wordmarks — `assets/logos/`
 
 | File | Origin |
 | --- | --- |
+| `10bips.svg` | built from the 10bips brand spec (`DESIGN.md` §7 and `10bips-lockup.svg`), 116×40 |
 | `blueprints.svg` | supplied, 304×50 |
 | `touchmarket.svg` | supplied, 114×16 |
 | `tcm.png` | `assets/TCM.png` in `AdamShymanski/TCM`, 640×315 |
@@ -86,6 +93,14 @@ to a single ink — RGB forced to black, original alpha kept — and trimmed to
 their ink bounds. That is what makes four marks from four different hands read
 as one set on a page whose only colour is a pale blue highlight, and it lets
 `filter: var(--sig)` invert them to white wherever the theme is dark.
+
+`10bips.svg` follows the same rule. The brand lockup sets "10bips" as live
+text in Newsreader 500 at 25px and paints its tall bar oxblood `#8C2319`.
+Here the wordmark is outlined to paths (Newsreader variable, `wght` 500,
+`opsz` 25, shaped with HarfBuzz, tracking +0.015em), since an SVG used as an
+`<img>` cannot load a web font, and the tall bar is the same ink as the rest.
+The C2PA metadata block and the dark background of the source file are
+dropped.
 
 Varp's repo also carries `logo.f76541a9.svg`, which is a *different* mark
 (a pyramid captioned PYRAMID). It is not the Varp wordmark; do not use it.
