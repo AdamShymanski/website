@@ -75,7 +75,7 @@ same file — the plate position is identical either way.
 
 ## Other assets
 
-- `assets/editorial/` — seven WebP stills for the `/work/` hero and project rows. `10bips.webp` is the exception: the 10bips mark on its paper `#f4f1ea`, drawn at 1112×594, standing in until a photograph is chosen. The other six are **full-resolution public-domain photographs**, not frames pulled from the beat clips; an earlier pass did that and the hero was visibly soft, because a 2x display wants 2720×896 there and a compressed 1920-wide video frame cannot carry it. Each file is served at or under its native resolution: hero 2720×896, rows 1112×594. Subjects echo the beat loops so the two pages read as one set. See `assets/SOURCES.md`.
+- `assets/editorial/` — seven WebP stills for the `/work/` hero and project rows. They are **full-resolution public-domain photographs**, not frames pulled from the beat clips; an earlier pass did that and the hero was visibly soft, because a 2x display wants 2720×896 there and a compressed 1920-wide video frame cannot carry it. Each file is served at or under its native resolution: hero 2720×896, rows 1112×594. Subjects echo the beat loops so the two pages read as one set. See `assets/SOURCES.md`.
 - `assets/signature.webp` — the logo. Inverted to white on the dark theme via `filter: var(--sig)`; rendered as-is on blue and light.
 - `assets/logos/` — five wordmarks: `10bips.svg` (116×40, bars plus wordmark), `blueprints.svg` (304×50, mark plus wordmark), `touchmarket.svg` (114×16, wordmark only), `tcm.png` (640×315, boxed logotype) and `varp.png` (710×189, wordmark with a glyph for its `A`). TCM's and Varp's were exported from their own repos and flattened to one ink — see `assets/SOURCES.md` for what changed and why.
 

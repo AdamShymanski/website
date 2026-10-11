@@ -68,14 +68,11 @@ one set.
 | `touchmarket.webp` | 1112×594 | Aerial surf, Vazon Bay | `Surfing in Vazon Bay` (Unsplash, CC0) | 4096×2160 |
 | `tcm.webp` | 1112×594 | Europe's city lights and the limb, from the ISS | `ISS-65 Europe, city lights from space` (NASA) | 5568×3712 |
 | `varp.webp` | 1112×594 | Iceberg under a starlit twilight | `Iceberg in North Star Bay, Greenland` | 3747×3178 |
-| `10bips.webp` | 1112×594 | The 10bips mark on its paper, `#f4f1ea` | drawn for this site from the brand spec, not a photograph | 1112×594 |
+| `10bips.webp` | 1112×594 | Earth at twilight: the line between day and night, from the ISS | `ISS002-E-7377`, 17 June 2001 (NASA; *Earth at Twilight*, `earthterminator_iss002_full.jpg`) | 3060×2092 |
 
-All public domain except Vazon Bay, which is CC0, and `10bips.webp`, which is
-Adam's own mark. It is a stand-in: the row should get a photograph like the
-others. Candidates looked at, all NASA: *Earth at Twilight* from the ISS
-(`ISS002-E-7377`, 3060×2092), the edge of iceberg A-68A from Operation
-IceBridge (John Sonntag, 4753×3169), and the vortex street behind Alejandro
-Selkirk Island from Landsat 7.
+All public domain except Vazon Bay, which is CC0. The twilight frame is cut
+across its full width from 200px down, which also leaves out the caption strip
+NASA printed along its bottom edge.
 
 ## Wordmarks — `assets/logos/`
 
