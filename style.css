@@ -629,8 +629,8 @@ a.mark:hover {
 }
 
 /* Wordmarks on the work beat, sized to a common cap height rather than a
-   common box — Blueprints is a lockup, Touchmarket a bare wordmark. Same
-   rule as `.project-mark` on /work/. */
+   common box — 10bips and Blueprints are lockups, Touchmarket a bare
+   wordmark. Same rule as `.project-mark` on /work/. */
 .work-marks {
   display: flex;
   flex-wrap: wrap;
@@ -660,6 +660,10 @@ a.mark:hover {
 
 .work-marks .mark-touchmarket {
   height: 22px;
+}
+
+.work-marks .mark-10bips {
+  height: 35px;
 }
 
 /* -------------------------------------------------------------------- *
@@ -1295,11 +1299,11 @@ html:not(.js) .experience > .site-footer {
 }
 
 /* A company shows its wordmark where a project shows a text heading. The
-   four marks are built differently — Blueprints is a lockup, Touchmarket a
-   bare wordmark, TCM a boxed logotype, Varp a wordmark with a glyph for its
-   A — so they are sized to a common *cap height* (~17px, matching the 24px
-   h2 beside them), not to a common box. TCM's frame therefore sits taller
-   than the rest; that is the mark, not an error.
+   five marks are built differently — 10bips and Blueprints are lockups,
+   Touchmarket a bare wordmark, TCM a boxed logotype, Varp a wordmark with a
+   glyph for its A — so they are sized to a common *cap height* (~17px,
+   matching the 24px h2 beside them), not to a common box. TCM's frame
+   therefore sits taller than the rest; that is the mark, not an error.
 
    Every heading in this column gets the same box so a logo row and a text
    row put their `learn-more` on the same line. */
@@ -1328,6 +1332,10 @@ html:not(.js) .experience > .site-footer {
 
 .project-mark .mark-varp {
   height: 30px;
+}
+
+.project-mark .mark-10bips {
+  height: 40px;
 }
 
 .project-details p {
