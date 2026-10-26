@@ -177,9 +177,10 @@
      there would be a tall box the 484:280 clip is cropped to a sliver
      of, and magnified in the process. So on a phone the copy stands on
      the page under the section list, and the plate is a full-bleed band
-     at the clip's own aspect, anchored to the bottom of the stage above
-     the footer's reserve, so the closing beat's footer never covers it
-     and the band sits in the same place on every beat.
+     at the clip's own aspect, anchored to the bottom edge of the stage,
+     so it sits in the same place on every beat and leaves no empty strip
+     under it. On the closing beat the footer stands on the bottom of the
+     band; style.css fades the picture out under its text.
 
      On a short phone the tallest beat's copy and a full band do not both
      fit. Rather than shrink the picture to a strip, the band keeps its
@@ -195,8 +196,9 @@
     var navBottom = sections ? sections.getBoundingClientRect().bottom - stageBox.top : 140;
 
     var copyTop = Math.round(navBottom + 40);
-    var footerH = footer ? Math.ceil(footer.getBoundingClientRect().height) : 0;
-    var bottom = stageH - footerH - 12;
+    /* The visible bottom, not the stage's: a short phone pins the stage
+       taller than the screen, and the band must stay on screen there. */
+    var bottom = Math.min(stageH, window.innerHeight);
     var w = window.innerWidth;
     var h = Math.round(w * PLATE_ASPECT);
     var copyEnd = copyTop + tallest + 28;

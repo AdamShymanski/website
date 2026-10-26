@@ -1540,6 +1540,19 @@ html:not(.js) .experience > .site-footer {
     display: none;
   }
 
+  /* The band runs to the bottom edge, so on the closing beat the footer
+     stands on the bottom of the picture. It takes the page colour, faded
+     in across its top padding so the picture dissolves under it rather
+     than being cut; the colour follows the theme cross-fade on exit. */
+  .experience > .site-footer {
+    background-color: var(--bg);
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 18px);
+    mask-image: linear-gradient(to bottom, transparent 0, #000 18px);
+    transition: opacity var(--dur-theme) var(--easing),
+      visibility 0s linear var(--dur-theme),
+      background-color var(--dur-theme) var(--easing);
+  }
+
   /* Compact the footer to a wrapped row: on a phone the stage has no
      spare height to give it. */
   .site-footer {
