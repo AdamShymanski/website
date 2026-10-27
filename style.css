@@ -217,8 +217,10 @@ ol {
   --sig: none;
   --mark-bg: #c3d8e5;
   --rule: rgba(0, 0, 0, 0.12);
-  --dim: #66747c;
-  --chrome-label: #66747c;
+  /* #66747c, the grey the other themes use, is 3.97:1 on this blue;
+     this is the same grey taken down to 4.52:1. */
+  --dim: #5e6b72;
+  --chrome-label: #5e6b72;
   --glow: rgba(0, 0, 0, 0.022);
   --grain-blend: multiply;
   --grain-op: 0.02;
@@ -336,7 +338,10 @@ ol {
 .site-header .logo {
   display: flex;
   align-items: center;
-  height: 15px;
+  /* A 44px tall target around a 15px signature; the margins give the
+     extra height back, so the header row stays 28px. */
+  height: 44px;
+  margin: -8px 0;
 }
 
 .site-header .logo img {
@@ -353,7 +358,8 @@ ol {
 }
 
 .site-header .nav a {
-  padding: 10px;
+  padding: 18px 10px;
+  margin: -8px 0;
   line-height: 8px;
   transition: opacity 0.16s;
 }
@@ -399,6 +405,11 @@ ol {
 }
 
 .site-footer a {
+  /* The words are 12px; the target is 44px tall. The negative margins
+     take the padding back so the footer keeps its height. */
+  display: inline-block;
+  padding: 14px 6px;
+  margin: -14px -6px;
   color: var(--chrome-muted);
   transition: color 0.16s;
 }
@@ -444,7 +455,8 @@ ol {
   font: 400 16px / 13px var(--font-primary);
   letter-spacing: -0.01em;
   text-align: left;
-  opacity: 0.3;
+  /* 0.55 is the lowest that keeps clickable text at 4.5:1 on every theme. */
+  opacity: 0.55;
   transition: opacity 0.2s var(--easing);
 }
 
@@ -510,6 +522,12 @@ ol {
   letter-spacing: var(--copy-ls);
   font-feature-settings: "liga" 0;
   text-wrap: pretty;
+}
+
+/* A headline is balanced, so it never ends on one word ("sports.") or
+   strands one mid-way ("economies'"). The sub-line stays pretty. */
+.copy p:not(.sub) {
+  text-wrap: balance;
 }
 
 /* Line masks for the headline. app.js cuts the paragraph into one .line
@@ -641,6 +659,8 @@ a.mark:hover {
 
 .work-marks a {
   display: block;
+  padding: 10px 0;
+  margin: -10px 0;
   opacity: 0.66;
   transition: opacity 0.18s var(--easing);
 }
@@ -846,6 +866,10 @@ html:not(.js) .experience > .site-footer {
 }
 
 .doc .crumb a {
+  /* 44px tall to a finger; the margins give the height back. */
+  display: inline-block;
+  padding: 14px 0;
+  margin: -14px 0;
   transition: color 0.16s;
 }
 
@@ -1063,6 +1087,10 @@ html:not(.js) .experience > .site-footer {
 }
 
 .doc ul.list li .a {
+  /* 44px tall inside the row's own 14px padding. */
+  display: inline-block;
+  padding: 11px 0;
+  margin: -11px 0;
   font-size: 16px;
   letter-spacing: -0.01em;
   transition: color 0.16s;
@@ -1071,6 +1099,12 @@ html:not(.js) .experience > .site-footer {
 .doc ul.list li .a::after {
   content: " ↗";
   color: var(--dim);
+}
+
+/* ↗ marks a link that leaves the site; a link to another page here gets
+   a plain arrow. */
+.doc ul.list li .a[href^="/"]::after {
+  content: " →";
 }
 
 .doc ul.list li .a:hover {
@@ -1476,7 +1510,12 @@ html:not(.js) .experience > .site-footer {
   }
 }
 
-@media (max-width: 760px) {
+/* The compact layouts: phones, portrait tablets, and any screen in
+   landscape that is 500px tall or less. They share the progress bar, the
+   Next cue and the compact footer; the landscape block near the end of
+   this file then moves the picture beside the copy instead of under it.
+   app.js reads the same three conditions (COMPACT_QUERY). */
+@media (max-width: 760px), (orientation: portrait) and (max-width: 1024px), (orientation: landscape) and (max-height: 500px) {
   :root {
     --inset: 20px;
     --copy-top: 35svh;
@@ -1499,7 +1538,14 @@ html:not(.js) .experience > .site-footer {
   }
 
   .site-header .nav a {
-    padding: 10px 8px;
+    padding: 18px 8px;
+  }
+
+  /* X is one letter; widen its target without moving the glyph. */
+  .site-header .nav a:last-child {
+    padding-right: 12px;
+    padding-left: 12px;
+    margin-right: -4px;
   }
 
   .stage {
@@ -1531,8 +1577,13 @@ html:not(.js) .experience > .site-footer {
   }
 
   .step-controls {
-    bottom: 10px;
-    left: 20px;
+    display: none;
+  }
+
+  /* The contact buttons are the whole point of the closing beat; on a
+     touch screen each is 44px tall. */
+  .actions a {
+    padding: 17px 14px;
   }
 
   /* The progress bar: one segment per beat (app.js builds it from the
@@ -1559,7 +1610,8 @@ html:not(.js) .experience > .site-footer {
     display: block;
     height: 2px;
     background: currentColor;
-    opacity: 0.2;
+    /* 3:1 on every theme, the floor for a state indicator. */
+    opacity: 0.43;
     transition: opacity 0.4s var(--easing);
   }
 
@@ -1795,6 +1847,7 @@ html:not(.js) .experience > .site-footer {
 
   .project-list {
     width: calc(100% - 40px);
+    max-width: none;
     margin: 96px 20px 0;
   }
 
@@ -1816,8 +1869,23 @@ html:not(.js) .experience > .site-footer {
   }
 }
 
-/* Short phones: the stage stops being proportional and gets pinned. */
-@media (max-width: 760px) and (max-height: 700px) {
+/* Very large screens: the copy, and the plate solved from it, grow with
+   the viewport instead of stopping at a laptop's size. */
+@media (min-width: 1800px) and (min-height: 900px) {
+  :root {
+    --copy-w: min(1000px, 46vw);
+    --copy-fs: clamp(58px, 3.4vw, 88px);
+    --sub-fs: clamp(19px, 1.05vw, 26px);
+    --sub-mt: 36px;
+  }
+
+  .sections button {
+    font-size: 18px;
+  }
+}
+
+/* Short phones bring the type down so the copy leaves the picture room. */
+@media (max-width: 760px) and (min-height: 501px) and (max-height: 700px) {
   :root {
     --copy-fs: clamp(26px, 7vw, 32px);
     --sub-fs: 15px;
@@ -1825,15 +1893,189 @@ html:not(.js) .experience > .site-footer {
   }
 }
 
-@media (max-width: 760px) and (max-height: 650px) {
+/* The shortest phones (iPhone SE and mini in Safari, 320x568) also pull
+   the chrome up. The stage stays exactly one screen tall: an earlier pin
+   to 760px left the closing footer below the screen and let a shared
+   section link scroll the whole layout. */
+@media (max-width: 760px) and (min-height: 501px) and (max-height: 620px) {
   :root {
-    --copy-top: 270px;
+    --copy-fs: clamp(24px, 6.6vw, 28px);
+    --sub-fs: 14px;
+    --sub-mt: 12px;
   }
 
-  .stage {
-    min-height: 760px;
+  .site-header {
+    top: 14px;
+  }
+
+  .progress {
+    top: 54px;
+  }
+
+  .sections {
+    top: 92px;
+  }
+
+  .work-marks {
+    gap: 10px 26px;
+    margin-top: 20px;
+  }
+
+  .work-marks .mark-10bips {
+    height: 28px;
+  }
+
+  .work-marks .mark-blueprints {
+    height: 21px;
+  }
+
+  .work-marks .mark-touchmarket {
+    height: 18px;
   }
 }
+
+/* Tall phones have room to spare between the copy and the picture, so
+   the headline grows into it rather than leaving a gap. */
+@media (max-width: 760px) and (min-height: 820px) {
+  :root {
+    --copy-fs: clamp(32px, 8.4vw, 46px);
+    --sub-fs: 17px;
+  }
+}
+
+/* Portrait tablets take the stacked layout too (copy on the page, the
+   picture full-bleed below it), at desktop insets and a larger type. */
+@media (orientation: portrait) and (min-width: 600px) and (max-width: 1024px) {
+  :root {
+    --inset: 40px;
+    --copy-left: 40px;
+    --copy-w: calc(100% - 80px);
+    --copy-fs: clamp(40px, 6vw, 58px);
+    --sub-fs: 19px;
+    --sub-mt: 26px;
+  }
+
+  .site-header {
+    top: 29px;
+  }
+
+  .progress {
+    top: 96px;
+    left: 40px;
+    right: 40px;
+  }
+
+  .sections {
+    top: 144px;
+    left: 40px;
+    right: 40px;
+  }
+
+  .sections button {
+    font-size: 14px;
+  }
+
+  .next-beat {
+    padding: 34px 40px 28px;
+    font-size: 16px;
+  }
+
+  .site-footer {
+    padding: 22px 40px;
+  }
+}
+
+/* A phone on its side, or any screen 500px tall or less in landscape.
+   The stacked layout has no height to stack in, so the picture fills the
+   screen's height at its own aspect on the right, dimmed as on a desktop,
+   and the copy stands over its left side. The left edge of the picture
+   fades into the page so the copy does not sit across a hard seam.
+   app.js's solveLandscapePlate places it. */
+@media (orientation: landscape) and (max-height: 500px) {
+  :root {
+    --inset: 32px;
+    --copy-left: 32px;
+    --copy-w: min(540px, 66vw);
+    --copy-fs: clamp(20px, 6.8vh, 32px);
+    --copy-lh: 1.1;
+    --sub-fs: 14px;
+    --sub-mt: 10px;
+    --mark-band-h: 1.1em;
+  }
+
+  .site-header {
+    top: 12px;
+  }
+
+  .progress {
+    top: 44px;
+    left: 32px;
+    right: 32px;
+  }
+
+  .sections {
+    top: 80px;
+    left: 32px;
+    right: 32px;
+  }
+
+  .media-plate {
+    opacity: var(--plate-op, 0.3);
+  }
+
+  .media-window {
+    -webkit-mask-image: linear-gradient(to right, transparent 0, #000 120px);
+    mask-image: linear-gradient(to right, transparent 0, #000 120px);
+  }
+
+  .next-beat {
+    padding: 22px 32px 14px;
+    font-size: 13px;
+  }
+
+  .next-beat::before {
+    height: 64px;
+  }
+
+  .actions {
+    margin-top: 14px;
+  }
+
+  .work-marks {
+    gap: 8px 24px;
+    margin-top: 14px;
+  }
+
+  .work-marks .mark-10bips {
+    height: 24px;
+  }
+
+  .work-marks .mark-blueprints {
+    height: 18px;
+  }
+
+  .work-marks .mark-touchmarket {
+    height: 15px;
+  }
+
+  .site-footer {
+    padding: 14px 32px;
+  }
+}
+
+/* Touch screens that keep the desktop layout (a tablet in landscape):
+   the beat list's rows grow to a finger's height. */
+@media (pointer: coarse) and (min-width: 761px) and (min-height: 501px) and (orientation: landscape) {
+  .sections {
+    top: calc(var(--nav-top) - 14px);
+    gap: 0;
+  }
+
+  .sections button {
+    padding: 14px 0;
+  }
+}
+
 
 @media (prefers-reduced-motion: reduce) {
   .page,

@@ -31,6 +31,7 @@
   var nextBeat = page.querySelector(".next-beat");
   var nextLabel = nextBeat ? nextBeat.querySelector(".next-beat-label") : null;
   var nextTimer = 0;
+  var themeMeta = document.querySelector('meta[name="theme-color"]');
 
   /* The phone's progress bar: one segment per beat, built from the
      section list so nothing here counts the beats. Past and current
@@ -108,6 +109,12 @@
   var WHEEL_REARM_RATIO = 0.7;
 
   var motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+  /* The layouts, as style.css draws them. Landscape: a screen 500px tall
+     or less on its side, picture beside the copy. Stacked: a phone, or a
+     tablet upright, copy above a full-bleed picture. Everything else is
+     the desktop plate. Keep these in step with the media queries. */
+  var landscapeQuery = window.matchMedia("(orientation: landscape) and (max-height: 500px)");
+  var stackedQuery = window.matchMedia("(max-width: 760px), (orientation: portrait) and (max-width: 1024px)");
   var index = -1;
   var busy = false;
   var busyTimer = null;
@@ -160,13 +167,17 @@
 
     var vw = window.innerWidth;
     var vh = window.innerHeight;
-    var phone = vw <= 760;
+    var phone = false;
     var mid = vw <= 1200;
     var r = copiesBox.getBoundingClientRect();
     var tallest = measureCopies();
     solvedFor = tallest;
 
-    if (phone) {
+    if (landscapeQuery.matches) {
+      solveLandscapePlate(tallest);
+      return;
+    }
+    if (stackedQuery.matches) {
       solvePhonePlate(tallest);
       return;
     }
@@ -225,9 +236,10 @@
     var sections = page.querySelector(".sections");
     var navBottom = sections ? sections.getBoundingClientRect().bottom - stageBox.top : 140;
 
-    var copyTop = Math.round(navBottom + 40);
-    /* The visible bottom, not the stage's: a short phone pins the stage
-       taller than the screen, and the band must stay on screen there. */
+    /* The shortest phones close the gap under the section name. */
+    var copyTop = Math.round(navBottom + (window.innerHeight <= 620 ? 28 : 40));
+    /* The visible bottom, never the stage's, so the band stays on screen
+       whatever the stage measures. */
     var bottom = Math.min(stageH, window.innerHeight);
     var w = window.innerWidth;
     var h = Math.round(w * PLATE_ASPECT);
@@ -246,6 +258,32 @@
     page.style.setProperty("--plate-w", w + "px");
     page.style.setProperty("--plate-h", h + "px");
     page.style.setProperty("--copy-top", copyTop + "px");
+  }
+
+  /* A screen 500px tall or less on its side has no height to stack the
+     copy over the picture, so the picture takes the screen's full height
+     at its own aspect, flush right (uncropped: it is only cut where it is
+     wider than the screen), and the copy stands over its left side under
+     the section name, as it stands on the plate on a desktop. */
+  function solveLandscapePlate() {
+    var stage = copiesBox.offsetParent || page;
+    var stageBox = stage.getBoundingClientRect();
+    var vw = window.innerWidth;
+    var h = Math.min(stage.clientHeight || window.innerHeight, window.innerHeight);
+    var w = Math.round(h / PLATE_ASPECT);
+    if (w > vw) {
+      w = vw;
+      h = Math.round(w * PLATE_ASPECT);
+    }
+    var sections = page.querySelector(".sections");
+    var navBottom = sections ? sections.getBoundingClientRect().bottom - stageBox.top : 100;
+
+    page.style.setProperty("--plate-fade", "0px");
+    page.style.setProperty("--plate-top", "0px");
+    page.style.setProperty("--plate-left", vw - w + "px");
+    page.style.setProperty("--plate-w", w + "px");
+    page.style.setProperty("--plate-h", h + "px");
+    page.style.setProperty("--copy-top", Math.round(navBottom + 18) + "px");
   }
 
   /* ------------------------------------------------------------------ *
@@ -284,6 +322,23 @@
     return out;
   }
 
+  /* The box a single character actually occupies. WebKit (Safari, and
+     every browser on iOS) also returns an empty box at the end of the
+     previous line, listed first, for the first character after a break
+     that is not at a space, such as the hyphen in "Market-making".
+     Taking the first box cut those lines one letter late ("Market-m" /
+     "aking"), so empty boxes are skipped. A character with no box of any
+     width, like the space a line broke at, gets none. */
+  function charBox(rects) {
+    var best = null;
+    for (var i = 0; i < rects.length; i++) {
+      if (rects[i].width > 0 && (!best || rects[i].width > best.width)) {
+        best = rects[i];
+      }
+    }
+    return best;
+  }
+
   function splitLines(p) {
     if (p.getAttribute("data-copy-src") === null) {
       p.setAttribute("data-copy-src", p.innerHTML);
@@ -318,7 +373,7 @@
       for (var i = 0; i < value.length; i++) {
         range.setStart(entry.node, i);
         range.setEnd(entry.node, i + 1);
-        var rect = range.getClientRects()[0];
+        var rect = charBox(range.getClientRects());
         /* The space a line broke at has no box of its own. */
         if (!rect) continue;
         var y = Math.round(rect.top);
@@ -532,6 +587,12 @@
     var current = i === index;
     var adjacent = Math.abs(i - index) === 1;
 
+    /* Posters past the first beat wait in data-poster until their beat is
+       on screen or next to it, so a first visit fetches two, not six. */
+    if ((current || adjacent) && video.getAttribute("data-poster") && !video.getAttribute("poster")) {
+      video.setAttribute("poster", video.getAttribute("data-poster"));
+    }
+
     if (current) {
       var played = video.play();
       if (played && played.catch) {
@@ -631,6 +692,12 @@
 
     var active = copies[index];
     page.dataset.theme = active.dataset.theme || "dark";
+    /* Phone browsers tint their bars from theme-color; follow the theme so
+       a white beat is not framed in black. */
+    if (themeMeta) {
+      var bg = getComputedStyle(page).getPropertyValue("--bg").trim();
+      if (bg) themeMeta.setAttribute("content", bg);
+    }
     page.classList.toggle("is-ending", active.hasAttribute("data-ending"));
 
     if (stepButtons.length === 2) {
@@ -678,7 +745,8 @@
     var name = beatName(index + 1);
     nextBeat.tabIndex = name ? 0 : -1;
     if (!name) return;
-    nextBeat.setAttribute("aria-label", "Next section: " + name);
+    /* Starts with the words on screen, so voice control finds it. */
+    nextBeat.setAttribute("aria-label", "Next: " + name);
     window.clearTimeout(nextTimer);
     if (!nextLabel.textContent || reduced()) {
       nextLabel.textContent = name;
@@ -863,6 +931,7 @@
      where the copy wraps and how tall it is. The cut comes first; the
      plate is solved from what it leaves behind. */
   function relayout() {
+    maxCopyH = 0;
     splitAll();
     solvePlate();
   }
@@ -879,6 +948,21 @@
   /* ------------------------------------------------------------------ *
    * Start
    * ------------------------------------------------------------------ */
+  /* A phone gets the phone cut of each clip (1170px wide, beat-N-m.mp4,
+     about 40% lighter): its band is never wider than about 430 CSS px,
+     which 1170 covers at 3x. Judged by the device, not the window, so
+     turning the phone does not swap a clip mid-play. Nothing has loaded
+     yet: every clip is preload="none" until app.js primes it. */
+  if (Math.min(window.screen.width, window.screen.height) <= 600) {
+    mediaBeats.forEach(function (beat) {
+      var video = beat.querySelector("video");
+      var src = video && video.getAttribute("src");
+      if (src && /\.mp4$/.test(src) && !/-m\.mp4$/.test(src)) {
+        video.setAttribute("src", src.replace(/\.mp4$/, "-m.mp4"));
+      }
+    });
+  }
+
   /* index is still -1 here, so this cuts every headline into lines and
      parks all six beats hidden — no beat is on screen yet to settle. */
   splitAll();
