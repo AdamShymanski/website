@@ -222,6 +222,12 @@
             <button type="button" data-step="-1">Previous</button>
             <button type="button" data-step="1">Next</button>
           </div>
+
+          <!-- Phone only: names the next beat over the bottom of the
+               picture; a tap steps to it. app.js fills the name. -->
+          <button type="button" class="next-beat">
+            <span class="next-beat-pre">Next</span><span class="next-beat-label"></span><span aria-hidden="true">↓</span>
+          </button>
         </section>
 
         <footer class="site-footer">

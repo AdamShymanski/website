@@ -745,7 +745,16 @@ a.mark:hover {
   transition-delay: 0s;
 }
 
-/* Keyboard-reachable beat stepping, revealed on focus only. */
+/* The progress bar and the next beat. Phone only; the 760 block turns
+   them on. */
+.progress,
+.next-beat {
+  display: none;
+}
+
+/* Keyboard-reachable beat stepping, revealed on focus only. The box
+   itself takes no taps: unrevealed, it would sit invisibly over the
+   phone's next-beat tab and swallow them. */
 .step-controls {
   position: absolute;
   z-index: 10;
@@ -753,6 +762,7 @@ a.mark:hover {
   left: var(--inset);
   display: flex;
   gap: 10px;
+  pointer-events: none;
 }
 
 .step-controls button {
@@ -777,7 +787,8 @@ a.mark:hover {
  * 8. No-JS fallback — the stage collapses into an ordinary document.
  * -------------------------------------------------------------------- */
 html:not(.js) .sections,
-html:not(.js) .step-controls {
+html:not(.js) .step-controls,
+html:not(.js) .next-beat {
   display: none;
 }
 
@@ -1499,7 +1510,7 @@ html:not(.js) .experience > .site-footer {
     display: flex;
     flex-wrap: wrap;
     gap: 12px 20px;
-    top: 108px;
+    top: 122px;
     left: 20px;
     right: 20px;
   }
@@ -1513,9 +1524,114 @@ html:not(.js) .experience > .site-footer {
     display: none;
   }
 
+  /* Only the current beat is named up top, under the progress bar; the
+     next one is named over the bottom of the picture (.next-beat below). */
+  .sections button:not(.is-selected) {
+    display: none;
+  }
+
   .step-controls {
     bottom: 10px;
     left: 20px;
+  }
+
+  /* The progress bar: one segment per beat (app.js builds it from the
+     section list), past and current solid, the rest dim. Each segment's
+     tap area is 40px tall around its 2px line, so a thumb can jump
+     straight to any beat. The current beat's name sits under the bar. */
+  .progress {
+    position: absolute;
+    z-index: 4;
+    top: 82px;
+    left: 20px;
+    right: 20px;
+    display: flex;
+    gap: 3px;
+  }
+
+  .progress button {
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 19px 0;
+  }
+
+  .progress i {
+    display: block;
+    height: 2px;
+    background: currentColor;
+    opacity: 0.2;
+    transition: opacity 0.4s var(--easing);
+  }
+
+  .progress .is-past i,
+  .progress .is-current i {
+    opacity: 1;
+  }
+
+  .progress button:focus-visible {
+    outline-offset: -12px;
+  }
+
+  /* The next beat, named over the bottom of the band: "Next", its name
+     and an arrow, on a fade of page colour so it reads on any picture.
+     It hangs off the band's own bottom edge rather than the stage's, so
+     it stays on screen where a short phone pins the stage taller than
+     the screen. The 20px inset lines it up with the copy above. */
+  .next-beat {
+    position: absolute;
+    z-index: 3;
+    top: calc(var(--plate-top) + var(--plate-h));
+    left: 0;
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    padding: 30px 20px 20px;
+    font: 400 14px / 1.3 var(--font-primary);
+    letter-spacing: -0.02em;
+    isolation: isolate;
+    transform: translateY(-100%);
+    transition: opacity 0.2s var(--easing),
+      visibility 0s linear 0s;
+  }
+
+  .next-beat::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    left: 0;
+    bottom: 0;
+    width: 100vw;
+    height: 110px;
+    background-color: var(--bg);
+    -webkit-mask-image: linear-gradient(to top, rgba(0, 0, 0, 0.92), transparent);
+    mask-image: linear-gradient(to top, rgba(0, 0, 0, 0.92), transparent);
+    pointer-events: none;
+    transition: background-color var(--dur-theme) var(--easing);
+  }
+
+  .next-beat-pre {
+    opacity: 0.55;
+  }
+
+  .next-beat-label {
+    transition: opacity 0.2s var(--easing);
+  }
+
+  .next-beat.is-swapping .next-beat-label {
+    opacity: 0;
+  }
+
+  .next-beat:focus-visible {
+    outline-offset: -4px;
+  }
+
+  /* The closing beat has no next one, and its footer takes the corner. */
+  .page.is-ending .next-beat {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.2s var(--easing),
+      visibility 0s linear 0.2s;
   }
 
   /* On a phone the copy stands on the page and the plate is a

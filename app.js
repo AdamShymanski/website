@@ -28,6 +28,36 @@
   var mediaBeats = toArray(page.querySelectorAll(".media-beat"));
   var navButtons = toArray(page.querySelectorAll(".sections button"));
   var stepButtons = toArray(page.querySelectorAll(".step-controls button"));
+  var nextBeat = page.querySelector(".next-beat");
+  var nextLabel = nextBeat ? nextBeat.querySelector(".next-beat-label") : null;
+  var nextTimer = 0;
+
+  /* The phone's progress bar: one segment per beat, built from the
+     section list so nothing here counts the beats. Past and current
+     segments are solid, the rest dim (go() keeps them in step), and each
+     is a tap target that jumps straight to its beat. It never fills on a
+     timer: the beats are paced by the visitor, not by a clock. style.css
+     shows it on a phone only. */
+  var segments = navButtons.map(function (button, i) {
+    var segment = document.createElement("button");
+    segment.type = "button";
+    segment.setAttribute("aria-label", beatName(i));
+    segment.appendChild(document.createElement("i"));
+    segment.addEventListener("click", function () {
+      go(i);
+    });
+    return segment;
+  });
+  if (segments.length) {
+    var progress = document.createElement("nav");
+    progress.className = "progress";
+    progress.setAttribute("aria-label", "Section progress");
+    segments.forEach(function (segment) {
+      progress.appendChild(segment);
+    });
+    var sectionList = navButtons[0].parentNode;
+    sectionList.parentNode.insertBefore(progress, sectionList);
+  }
   var footer = page.querySelector(".site-footer");
   var last = copies.length - 1;
 
@@ -488,17 +518,24 @@
      the next wipe never lands on an unpainted frame; everything further
      out stays at `preload="none"` until it is needed. A beat that is
      leaving keeps playing until its slide is over, or it would freeze
-     halfway out of the window. */
+     halfway out of the window.
+
+     The clips play under reduced motion too: they are slow ambient
+     footage, not movement the page makes, and a page of frozen first
+     frames read as broken. What reduced motion does still turn off is
+     the motion the page itself makes: the plate's slide, the copy's
+     rise. Where the browser refuses to autoplay at all (iOS in Low Power
+     Mode), the clip starts on the visitor's first touch or key. */
   function setPlayback(beat, i) {
     var video = beat.querySelector("video");
     if (!video) return;
     var current = i === index;
     var adjacent = Math.abs(i - index) === 1;
 
-    if (current && !reduced()) {
+    if (current) {
       var played = video.play();
       if (played && played.catch) {
-        played.catch(function () {});
+        played.catch(retryOnGesture);
       }
       return;
     }
@@ -517,6 +554,26 @@
       if (mediaBeats.indexOf(beat) === index) return;
       video.pause();
     }, reduced() ? 0 : PLATE_MS);
+  }
+
+  var gestureArmed = false;
+  var GESTURES = ["touchend", "pointerdown", "keydown"];
+
+  function retryOnGesture() {
+    if (gestureArmed) return;
+    gestureArmed = true;
+    GESTURES.forEach(function (type) {
+      document.addEventListener(type, retry, true);
+    });
+  }
+
+  function retry() {
+    gestureArmed = false;
+    GESTURES.forEach(function (type) {
+      document.removeEventListener(type, retry, true);
+    });
+    var beat = mediaBeats[index];
+    if (beat) setPlayback(beat, index);
   }
 
   /* ------------------------------------------------------------------ *
@@ -566,6 +623,11 @@
       button.classList.toggle("is-selected", i === index);
       button.setAttribute("aria-current", i === index ? "true" : "false");
     });
+    segments.forEach(function (segment, i) {
+      segment.classList.toggle("is-past", i < index);
+      segment.classList.toggle("is-current", i === index);
+      segment.setAttribute("aria-current", i === index ? "true" : "false");
+    });
 
     var active = copies[index];
     page.dataset.theme = active.dataset.theme || "dark";
@@ -575,6 +637,8 @@
       stepButtons[0].disabled = index === 0;
       stepButtons[1].disabled = index === last;
     }
+
+    showNext();
 
     if (active.id && !opts.silent) {
       var target = index === 0 ? window.location.pathname : "#" + active.id;
@@ -588,6 +652,48 @@
     if (measureCopies() !== solvedFor) solvePlate();
 
     lock();
+  }
+
+  /* The phone's next-beat tab. Its name is read off the section list, so
+     nothing here counts the beats. On the closing beat there is no next
+     one: the tab keeps its last name and fades out (style.css), and the
+     footer takes the corner. A new name crossfades in rather than
+     snapping, unless motion is reduced. */
+  function beatName(i) {
+    var button = navButtons[i];
+    if (!button) return "";
+    return toArray(button.childNodes)
+      .filter(function (node) {
+        return node.nodeType === 3;
+      })
+      .map(function (node) {
+        return node.textContent;
+      })
+      .join("")
+      .trim();
+  }
+
+  function showNext() {
+    if (!nextLabel) return;
+    var name = beatName(index + 1);
+    nextBeat.tabIndex = name ? 0 : -1;
+    if (!name) return;
+    nextBeat.setAttribute("aria-label", "Next section: " + name);
+    window.clearTimeout(nextTimer);
+    if (!nextLabel.textContent || reduced()) {
+      nextLabel.textContent = name;
+      nextBeat.classList.remove("is-swapping");
+      return;
+    }
+    if (name === nextLabel.textContent) {
+      nextBeat.classList.remove("is-swapping");
+      return;
+    }
+    nextBeat.classList.add("is-swapping");
+    nextTimer = window.setTimeout(function () {
+      nextLabel.textContent = name;
+      nextBeat.classList.remove("is-swapping");
+    }, 200);
   }
 
   function lock() {
@@ -730,25 +836,15 @@
     });
   });
 
+  if (nextBeat) {
+    nextBeat.addEventListener("click", function () {
+      step(1);
+    });
+  }
+
   window.addEventListener("hashchange", function () {
     go(beatFromHash(), { silent: true });
   });
-
-  /* Someone turning reduced motion on should stop the clip they are
-     looking at, not just the next transition. */
-  addMotionListener(function () {
-    mediaBeats.forEach(function (el, i) {
-      setPlayback(el, i);
-    });
-  });
-
-  function addMotionListener(handler) {
-    if (motionQuery.addEventListener) {
-      motionQuery.addEventListener("change", handler);
-    } else if (motionQuery.addListener) {
-      motionQuery.addListener(handler);
-    }
-  }
 
   function beatFromHash() {
     var id = window.location.hash.slice(1);
